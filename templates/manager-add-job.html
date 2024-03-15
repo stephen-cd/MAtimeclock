@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/manager.css">
+    <script src="../static/js/manager-add-job.js" type="module" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="main-body">
+        <a href="manager.html" type="button"><button id="back">Back</button></a>
+        <a href="index.html"><button id="home">Home</button></a>
+        <form method="post">
+            <div id="keypad-holder" style="padding-top: 60px; display: flex;">
+                <div id="job-enter">
+                    <label id="job-label" for="job">Job ID:</label>
+                    <input id="job" type="text" placeholder="Job ID">
+                    <a><button id="enter" type="button">Enter</button></a>
+                </div>
+                <h3 id="pins-do-not-match">Pins do not match, please enter again.</h3>
+                <div id="keypad">
+                    <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
+                    <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
+                    <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
+                    <div id="backspace" class="keypad-button">&#x2190;</div>
+                    <div id="dash" class="keypad-button">-</div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="success-body">
+        <h1 id="success-message"></h1>
+        <a href="manager-add-job.html"><button id="add-other-jobs" type="button">Add Another Job</button></a>
+        <a href="manager.html"><button id="return-to-menu" type="button">Return to Menu</button></a>
+    </div>
+</body>
+</html>

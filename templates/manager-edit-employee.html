@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/manager.css">
+    <script src="../static/js/manager-edit-employee.js" type="module" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="main-body">
+        <a href="manager.html"><button id="back" type="button">Back</button></a>
+        <a href="index.html"><button id="home" type="button">Home</button></a>
+        <form method="post">
+            <div id="select-employee-holder">
+                <div>
+                    <label for="select-employee">Employee</label>
+                    <select id="select-employee"></select>
+                </div>
+                <button id="emp-select-next" type="button">Next</button>
+            </div>
+            <div id="edit-employee-options">
+                <h1 id="editing-employee"></h1>
+                <button id="edit-name" type="button">Edit Name</button>
+                <button id="edit-pin" type="button">Change PIN</button>
+            </div>
+            <div id="edit-employee-name-inputs">
+                <div>
+                    <label for="first-name">First Name:</label>
+                    <input id="first-name" type="text">
+                </div>
+                <div>
+                    <label for="last-name">Last Name:</label>
+                    <input id="last-name" type="text">
+                </div>
+                <button id="edit-name-enter" class="edit-enter" type="button">Save Changes</button>
+            </div>
+            <div id="keypad-holder" style="padding-top: 60px;">
+                <div id="pin-enter">
+                    <label id="pin-label" for="pin">Emp. PIN:</label>
+                    <input id="pin" type="password" placeholder="PIN">
+                    <a><button id="enter" type="button">Enter</button></a>
+                </div>
+                <h3 id="pins-do-not-match">Pins do not match, please enter again.</h3>
+                <div id="keypad">
+                    <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
+                    <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
+                    <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
+                    <div id="backspace" class="keypad-button">&#x2190;</div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="success-body">
+        <h1 id="success-message"></h1>
+        <a><button id="success-change-pin">Change PIN</button></a>
+        <a><button id="success-change-name">Change Name</button></a>
+        <a href="manager-edit-employee.html"><button id="edit-other-emps" type="button">Edit Another Emp.</button></a>
+        <a href="manager.html"><button id="return-to-menu" type="button">Return to Menu</button></a>
+    </div>
+</body>
+</html>
