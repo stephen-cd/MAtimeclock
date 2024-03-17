@@ -11,7 +11,7 @@ html, body {
     overflow-y: hidden;
 }
 
-#manager-options-1, #manager-options-2, #MO-row1, #MO-row2, #add-employee-inputs, #edit-employee-options, #edit-employee-name-inputs {
+#manager-options-1, #manager-options-2, #MO-row1, #MO-row2, #add-employee-inputs, #edit-employee-options, #edit-employee-name-inputs, #edit-job-options {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,14 +24,14 @@ html, body {
 }
 
 #home, #back, #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-enter,
-#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs {
+#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next {
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
     border: unset;
 }
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
-#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs {
+#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
@@ -62,6 +62,12 @@ html, body {
     font-size: 50px;
 }
 
+#change-job-id, #complete-or-reopen-job, #remove-job {
+    width: 550px;
+    height: 75px;
+    font-size: 50px;
+}
+
 #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs {
     width: 350px;
     height: 75px;
@@ -78,7 +84,7 @@ html, body {
     transform: translateY(-3px);
 }
 
-#next, #emp-select-next {
+#next, #emp-select-next, #job-select-next {
     width: 150px;
     height: 60px;
     font-size: 30px;
@@ -116,7 +122,7 @@ input:focus-visible, #pin:focus-visible {
     outline-color: #13c296;
 }
 
-#enter {
+#enter, .keypad-enter {
     width: 120px;
     height: 100%;
     background-color: #13c296;
@@ -124,7 +130,7 @@ input:focus-visible, #pin:focus-visible {
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
 }
 
-#pin, #enter, #edit-enter, #job {
+#pin, #enter, #edit-enter, #job, .keypad-enter {
     border-radius: 5px;
     border: unset;
     font-size: 25px;
@@ -137,6 +143,7 @@ input:focus-visible, #pin:focus-visible {
     flex-direction: column;
     gap: 30px;
     padding-top: 20px;
+    position: relative;
 }
 
 .keypad-row {
@@ -201,7 +208,7 @@ button {
     height: 100%;
 }
 
-#success-message {
+.success-message {
     color: springgreen;
     text-align: center;
 }
@@ -214,7 +221,7 @@ button {
     height: 100%;
 }
 
-#select-employee-holder {
+#select-employee-holder, #select-job-holder {
     display: flex;
     justify-content: center;
     align-items: end;
@@ -222,22 +229,22 @@ button {
     margin: 0 50px;
 }
 
-#select-employee {
+#select-employee, #select-job {
     width: 500px;
     height: 300px;
     font-size: 25px;
 }
 
-#select-employee option {
+#select-employee option, #select-job option {
     height: 40px;
     padding-top: 10px;
 }
 
-#select-employee:focus-visible {
+#select-employee:focus-visible, #select-job:focus-visible {
     outline: none;
 }
 
-#edit-employee-options, #edit-employee-name-inputs {
+#edit-employee-options, #edit-employee-name-inputs, #edit-job-options {
     display: none;
 }
 
@@ -247,7 +254,7 @@ label[for=select-employee] {
     max-width: unset;
 }
 
-#edit-employee-options, #edit-employee-name-inputs {
+#edit-employee-options, #edit-employee-name-inputs, #edit-job-options {
     height: 100%;
     flex-direction: column;
 }
@@ -268,4 +275,22 @@ label[for=select-employee] {
     bottom: 132px;
     height: 70px;
     right: 35px;
+}
+
+#no-emps, #no-jobs, #complete-or-reopen-job-holder, #remove-job-holder {
+    display: none;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-md {
+    background-color: #13c296;
+    color: white;
+    text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
+    border-radius: 5px;
+    border: unset;
+    width: 350px;
+    height: 75px;
+    font-size: 40px;
 }

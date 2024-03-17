@@ -31,11 +31,19 @@ let successChangePin = document.getElementById('success-change-pin');
 let successChangeName = document.getElementById('success-change-name');
 let numberOfEmps;
 let backspace = document.getElementById('backspace');
+let noEmps = document.getElementById('no-emps');
 sessionStorage.setItem('backToMO', 'true');
 
 await getEmployeeNames().then((res) => {
     numberOfEmps = res.length;
-    selectEmployee.setAttribute('size', numberOfEmps);
+    if (numberOfEmps == 0) {
+        mainBody.style.display = 'none';
+        noEmps.style.display = 'flex';
+        setTimeout(() => {
+            window.location.href = '../templates/manager.html';
+        }, 2000);
+    }
+    numberOfEmps > 1 ? selectEmployee.setAttribute('size', numberOfEmps) : selectEmployee.setAttribute('size', 2)
     res.forEach(employee => {
         let empEntry = {};
         empEntry['firstName'] = employee['first_name'];
