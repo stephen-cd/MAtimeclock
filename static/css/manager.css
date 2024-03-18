@@ -24,14 +24,16 @@ html, body {
 }
 
 #home, #back, #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-enter,
-#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next {
+#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next,
+#date-select-next {
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
     border: unset;
 }
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
-#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job {
+#success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job,
+#date-select-next {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
@@ -84,7 +86,7 @@ html, body {
     transform: translateY(-3px);
 }
 
-#next, #emp-select-next, #job-select-next {
+#next, #emp-select-next, #job-select-next, #date-select-next {
     width: 150px;
     height: 60px;
     font-size: 30px;
@@ -244,7 +246,7 @@ button {
     outline: none;
 }
 
-#edit-employee-options, #edit-employee-name-inputs, #edit-job-options {
+#edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #date-picker-holder, #work-session-holder {
     display: none;
 }
 
@@ -259,7 +261,7 @@ label[for=select-employee] {
     flex-direction: column;
 }
 
-#keypad-holder {
+#keypad-holder, #complete-or-reopen-job-holder, #remove-job-holder {
     flex-direction: column;
 }
 
@@ -293,4 +295,21 @@ label[for=select-employee] {
     width: 350px;
     height: 75px;
     font-size: 40px;
+}
+
+.page {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#date-picker {
+    width: 400px;
+    height: 75px;
+    font-size: 25px;
+    margin-bottom: 125px;
+}
+
+#date-picker-holder {
+    flex-direction: column;
 }

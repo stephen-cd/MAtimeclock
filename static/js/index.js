@@ -1,3 +1,5 @@
+import { insertTimeRecords } from "./transactions.js";
+
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
@@ -5,6 +7,8 @@ let admins = ['7', '8', '9'];
 let emps = ['1', '2', '3'];
 let backspace = document.getElementById('backspace');
 sessionStorage.setItem('backToMO', 'false');
+
+insertTimeRecords()
 
 // Add event listeners to each keypad button to append corresponding number to pin value when pressed
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Sessions</title>
+    <link rel="stylesheet" href="../static/css/manager.css">
+    <script src="../static/js/manager-work-sessions.js" type="module" defer></script>
+</head>
+<body>
+    <div id="main-body">
+        <a href="manager.html" type="button"><button id="back">Back</button></a>
+        <a href="index.html"><button id="home">Home</button></a>
+        <form method="post">
+            <div id="select-employee-holder" class="page">
+                <div>
+                    <label for="select-employee">Employee</label>
+                    <select id="select-employee"></select>
+                </div>
+                <button id="emp-select-next" type="button">Next</button>
+            </div>
+            <div id="date-picker-holder" class="page">
+                <input id="date-picker" type="date">
+                <button id="date-select-next" type="button">Next</button>
+            </div>
+            <div id="work-session-holder">
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
+            </div>
+            <div id="add-work-session-holder">
+
+            </div>
+            <div id="edit-work-session-holder">
+
+            </div>
+        </form>
+    </div>
+    <div id="success-body">
+        <h1 class="success-message"></h1>
+        <!-- <a><button id="success-change-pin">Change PIN</button></a>
+        <a><button id="success-change-name">Change Name</button></a>
+        <a href="manager-edit-employee.html"><button id="edit-other-emps" type="button">Edit Another Emp.</button></a>
+        <a href="manager.html"><button id="return-to-menu" type="button">Return to Menu</button></a> -->
+    <!-- </div>
+</body>
+</html>
