@@ -1,4 +1,4 @@
-import { getEmployeeNames, getEmployeeWorkSessions } from "./transactions.js";
+import { getEmployeeNames, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession } from "./transactions.js";
 
 let empDict = {};
 let selectEmployeeHolder = document.getElementById('select-employee-holder');
@@ -15,6 +15,13 @@ let selectedID;
 let firstName;
 let lastName;
 let date;
+let addWorkSessionBtn = document.getElementById('add-work-session');
+let addWorkSessionHolder = document.getElementById('add-work-session-holder');
+let addSessionStart = document.getElementById('add-session-start');
+let addSessionEnd = document.getElementById('add-session-end');
+let addSessionSubmit = document.getElementById('add-session-submit');
+let addSessionJobId = document.getElementById('add-session-job-id');
+let errorMessage = document.getElementById('error-message');
 
 await getEmployeeNames().then((res) => {
     numberOfEmps = res.length;
@@ -64,45 +71,168 @@ datePicker.addEventListener('change', () => {
     date = datePicker.value;
 })
 
+datePicker.addEventListener('click', () => {
+    datePicker.showPicker();
+})
+
 datePickerNext.addEventListener('click', () => {
-    console.log(selectedID, date)
+    // After picking the date, get the relevant employee work sessions based on selected employee and date
+    // and build the chart with the data.
     getEmployeeWorkSessions(selectedID, date).then((res) => {
-        console.log(res);
-        let dateRanges = res.map(session => [ { x: [new Date(session['start_time']), new Date(session['end_time'])], y: session['job_id'] } ])
+        let graph;
+        // let dateRanges = res.map(session => [ [session['start_time'], session['end_time']] ])
+        let dateRanges = [];
+        res.forEach(session => {
+            let sessionDict = {};
+            sessionDict['x'] = [new Date(`${date}T${session['start_time']}`), new Date(`${date}T${session['end_time']}`)];
+            sessionDict['y'] = `${session['job_id']}`;
+            dateRanges.push(sessionDict);
+        })
         console.log(dateRanges)
-        const ctx = document.getElementById('myChart');     
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        // let jobs = res.map(session => session['job_id'])
+        
+        const data = {
             datasets: [{
-                label: `Work Sessions for ${firstName} ${lastName} on ${date}`,
+                label: `Completed`,
                 data: dateRanges,
                 borderWidth: 1
+            // },
+            // {
+            //     label: `In Progress`,
+            //     data: inProgressRanges,
+            //     backgroundColor: 'rgba(255,206,86,1,0.75)',
+            //     borderColor: 'rgba(255,206,86,1)',
+            //     borderWidth: 1
             }]
-            },
+        }
+
+        const config = {
+            type: 'bar',
+            data,
             options: {
-                barPercentage: 1,
-                categoryPercentage: 1,
+                aspectRatio: 3,
+                barPercentage: 0.2,
+                plugins: {
+                    legend: {
+                        labels : {
+                            color: 'white'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: `Work Sessions for ${firstName} ${lastName} on ${date}`,
+                        color: 'white',
+                        fontSize: '20px',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: ((tooltipItem, data) => {
+                                let start = tooltipItem['raw']['x'][0];
+                                let start_min = (start.getMinutes() < 10 ? '0' : '') + start.getMinutes();
+                                let end = tooltipItem['raw']['x'][1];
+                                let end_min = (end.getMinutes() < 10 ? '0' : '') + end.getMinutes();
+                                return `${start.getHours()}:${start_min} - ${end.getHours()}:${end_min}`;
+                            })
+                        }
+                    },
+                },
                 indexAxis: 'y',
-                aspectRatio: 10,
                 scales: {
                     x: {
                         type: 'time',
                         time: {
+                            parser: 'HH:mm:ss',
                             unit: 'hour'
                         },
+                        ticks: {
+                            color: 'white',
+                        },
+                        grid: {
+                            color: 'rgba(255,255,255,0.25)',
+                        },
                         min: new Date(`${date}T06:00:00`),
-                        max: new Date(`${date}T20:00:00`)
+                        max: new Date(`${date}T20:00:00`),
                     },
                     y: {
                         beginAtZero: true,
-                        stacked: true
+                        ticks: {
+                            color: 'white',
+                        },
+                        grid: {
+                            color: 'rgba(255,255,255,0.25)',
+                        },
                     }
                 }
             }
-        });
+        };
+
+        graph = new Chart(document.getElementById('myChart').getContext('2d'), config)
+
+        ctx.addEventListener('click', (e) => {
+            let points = graph.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                const label = graph.data.labels[firstPoint.index];
+                const slabel = graph.data.datasets[firstPoint.datasetIndex].label;
+                const value = graph.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
+                console.log(label, slabel, value);
+              }
+        })
     });
     datePickerHolder.style.display = 'none';
     workSessionHolder.style.display = 'block';
+})
+
+addWorkSessionBtn.addEventListener('click', () => {
+    getJobs().then((res) => {
+        workSessionHolder.style.display = 'none';
+        addWorkSessionHolder.style.display = 'flex';
+        res.forEach(job => {
+            let option = document.createElement('option');
+            option.setAttribute('value', job['id']);
+            option.innerText = job['job_id'];
+            addSessionJobId.appendChild(option);
+        })
+    })
+})
+
+addSessionStart.addEventListener('click', () => {
+    addSessionStart.showPicker();
+})
+
+addSessionEnd.addEventListener('click', () => {
+    addSessionEnd.showPicker();
+})
+
+addSessionJobId.addEventListener('change', () => {
+    if (addSessionJobId.style.border) addSessionJobId.style.border = '';
+})
+
+addSessionStart.addEventListener('change', () => {
+    if (addSessionStart.style.border) addSessionStart.style.border = '';
+})
+
+addSessionEnd.addEventListener('change', () => {
+    if (addSessionEnd.style.border) addSessionEnd.style.border = '';
+})
+
+addSessionSubmit.addEventListener('click', () => {
+    if (!addSessionJobId.value || !addSessionStart.value || !addSessionEnd.value) {
+        if (!addSessionJobId.value) addSessionJobId.style.border = '2px solid red';
+        if (!addSessionStart.value) addSessionStart.style.border = '2px solid red';
+        if (!addSessionEnd.value) addSessionEnd.style.border = '2px solid red';
+        return
+    }
+    let startTime = new Date(`${date}T${addSessionStart.value}:00`);
+    let endTime = new Date(`${date}T${addSessionEnd.value}:00`);
+    if (startTime >= endTime) {
+        addSessionStart.style.border = '2px solid red';
+        addSessionEnd.style.border = '2px solid red';
+        errorMessage.style.display = 'block';
+        errorMessage.innerText = 'Invalid time range';
+        setTimeout(() => {
+            errorMessage.style.display = '';
+            errorMessage.innerText = '';
+        }, 2000);
+    }
 })

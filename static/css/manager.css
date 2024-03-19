@@ -11,21 +11,21 @@ html, body {
     overflow-y: hidden;
 }
 
-#manager-options-1, #manager-options-2, #MO-row1, #MO-row2, #add-employee-inputs, #edit-employee-options, #edit-employee-name-inputs, #edit-job-options {
+#manager-options-1, #manager-options-2, #MO-row1, #MO-row2, #add-employee-inputs, #edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #work-session-holder {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 25px;
 }
 
-#manager-options-1, #manager-options-2, #add-employee-inputs {
+#manager-options-1, #manager-options-2, #add-employee-inputs, #add-work-session-holder {
     flex-direction: column;
     height: 100%;
 }
 
 #home, #back, #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next,
-#date-select-next {
+#date-select-next, #add-work-session {
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
     border: unset;
@@ -33,7 +33,7 @@ html, body {
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job,
-#date-select-next {
+#date-select-next, #add-work-session {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
@@ -76,7 +76,7 @@ html, body {
     font-size: 40px;
 }
 
-#first-name, #last-name {
+#first-name, #last-name, #add-session-job-id, #add-session-start, #add-session-end {
     width: 500px;
     height: 100%;
     font-size: 30px;
@@ -86,7 +86,7 @@ html, body {
     transform: translateY(-3px);
 }
 
-#next, #emp-select-next, #job-select-next, #date-select-next {
+#next, #emp-select-next, #job-select-next, #date-select-next, #add-work-session {
     width: 150px;
     height: 60px;
     font-size: 30px;
@@ -246,7 +246,7 @@ button {
     outline: none;
 }
 
-#edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #date-picker-holder, #work-session-holder {
+#edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #date-picker-holder, #work-session-holder, #add-work-session-holder, #edit-work-session-holder {
     display: none;
 }
 
@@ -313,3 +313,35 @@ label[for=select-employee] {
 #date-picker-holder {
     flex-direction: column;
 }
+
+canvas {
+    margin-top: 50px;
+}
+
+#work-session-holder {
+    position: relative;
+}
+
+#add-work-session {
+    position: absolute;
+    bottom: -120px;
+    left: 290px;
+    width: 200px;
+}
+
+#add-work-session-holder {
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 70px;
+    gap: 20px;
+}
+
+#error-message {
+    color: red;
+    position: absolute;
+}
+
+/* input[type=time]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+} */

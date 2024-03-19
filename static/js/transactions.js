@@ -74,16 +74,16 @@ function removeJob(id) {
 
 // For dev, insert dummy time records
 function insertTimeRecords() {
-    let date = '2024-03-17'
-    let start_time = '2024-03-17T12:00:00';
-    let end_time = '2024-03-17T19:00:00';
+    let date = '2024-03-19'
+    let start_time = '12:00:00';
+    let end_time = '19:00:00';
     let statement = `INSERT INTO timeclock_hours (date, start_time, end_time, uuid, job_id) VALUES ("${date}", "${start_time}", "${end_time}", "cb91e90c-ea98-41b2-884a-30b941a15c5a", "1234-56")`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
 
 // Get employee time records
 async function getEmployeeWorkSessions(employeeUuid, date) {
-    let statement = `SELECT start_time, end_time, job_id FROM timeclock_hours WHERE date="${date}" AND uuid="${employeeUuid}"`;
+    let statement = `SELECT start_time, end_time, job_id FROM timeclock_hours WHERE date="${date}" AND uuid="${employeeUuid}" ORDER BY job_id`;
     return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
@@ -94,5 +94,17 @@ async function getEmployeeWorkSessions(employeeUuid, date) {
     })
 }
 
+// Add work session
+function addWorkSession(employeeUuid, date, jobId, startTime, endTime) {
+    let statement = `INSERT INTO timeclock_hours (uuid, date, job_id, start_time, end_time) VALUES ("${employeeUuid}", "${date}", "${jobId}", "${startTime}", "${endTime}")`;
+    db.run(statement, (err) => { if (err) console.log(err); return err; });
+}
+
+// Edit work session
+function editWorkSession(id, jobId, startTime, endTime) {
+    let statement = `UPDATE timeclock_hours SET jobId="${jobId}", start_time="${startTime}", end_time="${endTime}" WHERE id="${id}"`;
+    db.run(statement, (err) => { if (err) return console.log(err.message); });
+}
+
 export { getEmployeeNames, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
-         insertTimeRecords, getEmployeeWorkSessions }
+         insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession }

@@ -24,15 +24,32 @@
                 <button id="date-select-next" type="button">Next</button>
             </div>
             <div id="work-session-holder">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
                 <div>
                     <canvas id="myChart"></canvas>
                 </div>
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
-                <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
+                <button id="add-work-session" type="button">Add Session</button>
             </div>
-            <div id="add-work-session-holder">
-
+            <div id="add-work-session-holder" class="page">
+                <h1 id="add-session-emp"></h1>
+                <h1 id="add-session-date"></h1>
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <label for="add-session-job-id">Job ID:</label>
+                    <select id="add-session-job-id">
+                        <option value="" selected></option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <label for="add-session-start">Start:</label>
+                    <input id="add-session-start" type="time">
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <label for="add-session-end">End:</label>
+                    <input id="add-session-end" type="time">
+                </div>
+                <button id="add-session-submit" class="button-md" type="button">Submit</button>
+                <h1 id="error-message"></h1>
             </div>
             <div id="edit-work-session-holder">
 
