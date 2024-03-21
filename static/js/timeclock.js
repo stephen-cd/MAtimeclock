@@ -50,7 +50,7 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
             welcomeHolder.style.display = 'none';
             clockIntoJobsHolder.style.display = 'none';
             successHolder.style.display = 'flex';
-            successMessage.innerHTML = `You have clocked out of Job ${clockedInJob}.<br><br>Logging out...`;
+            successMessage.innerHTML = `You have clocked out of <span id="success-subject">Job ${clockedInJob}</span>.<br><br>Logging out...`;
             setTimeout(() => {
                 successHolder.style.display = '';
                 window.location.href = '../templates/index.html';
@@ -84,7 +84,7 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
             clockIn(sessionStorage['pin'], selectedJob);
             clockIntoJobsHolder.style.display = 'none';
             successHolder.style.display = 'flex';
-            successMessage.innerHTML = `You are now clocked in for Job ${selectedJob}.<br><br>Logging out...`;
+            successMessage.innerHTML = `You are now clocked in for <span id="success-subject">Job ${selectedJob}</span>.<br><br>Logging out...`;
             setTimeout(() => {
                 successHolder.style.display = '';
                 window.location.href = '../templates/index.html';

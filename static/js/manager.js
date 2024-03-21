@@ -3,7 +3,6 @@ let managerOptions1 = document.getElementById('manager-options-1');
 let back = document.getElementById('back');
 let managerOptions2 = document.getElementById('manager-options-2');
 let goToMO2 = document.getElementById('go-to-MO2');
-console.log(sessionStorage)
 
 back.addEventListener('click', () => {
     managerOptions1.style.display = 'flex';
@@ -21,10 +20,7 @@ goToMO2.addEventListener('click', () => {
     back.hidden = false;
 })
 
-console.log(typeof sessionStorage.getItem('backToMO'))
-
 if (sessionStorage.getItem('backToMO') == 'true') {
-    console.log('here')
     managerOptions1.style.display = 'none';
     managerOptions2.style.display = 'flex';
     back.hidden = false;

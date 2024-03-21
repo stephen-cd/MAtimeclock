@@ -138,3 +138,11 @@ html, body {
 #clock-into-job, #clock-out {
     display: none;
 }
+
+#success-message {
+    color: springgreen;
+}
+
+#success-subject {
+    color: white;
+}

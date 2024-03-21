@@ -37,43 +37,53 @@ let workSessionId;
 let successBackToSessionsEdit = document.getElementById('success-back-to-sessions-edit');
 let successSessionsAdd = document.getElementById('success-sessions-add');
 let successSessionsEdit = document.getElementById('success-sessions-edit');
+let titleDate;
 
 function createChart(selectedID, date) {
     // After picking the date, get the relevant employee work sessions based on selected employee and date
     // and build the chart with the data.
     getEmployeeWorkSessions(selectedID, date).then((res) => {
+        let sessions = res;
         let dateRanges = [];
+        let completedDateRanges = [];
+        let inProgressDateRanges = [];
+        let currentTime = new Date();
         res.forEach(session => {
             let sessionDict = {};
             sessionDict['x'] = [new Date(`${date}T${session['start_time']}`), new Date(`${date}T${session['end_time']}`)];
             sessionDict['y'] = `${session['job_id']}`;
             dateRanges.push(sessionDict);
-            workSessionId = session['id'];
         })
+        completedDateRanges = dateRanges.filter(dict => !isNaN(dict['x'][1].valueOf()));
+        inProgressDateRanges = dateRanges.filter(dict => isNaN(dict['x'][1].valueOf()));
+        inProgressDateRanges.forEach(dict => dict['x'][1] = currentTime);
+
         
         const data = {
             datasets: [{
                 label: `Completed`,
-                data: dateRanges,
+                data: completedDateRanges,
+                backgroundColor: 'rgba(3, 169, 252, 0.5)',
+                borderColor: 'rgba(3, 169, 252)',
                 borderWidth: 1
-            // },
-            // {
-            //     label: `In Progress`,
-            //     data: inProgressRanges,
-            //     backgroundColor: 'rgba(255,206,86,1,0.75)',
-            //     borderColor: 'rgba(255,206,86,1)',
-            //     borderWidth: 1
+            },
+            {
+                label: `In Progress`,
+                data: inProgressDateRanges,
+                backgroundColor: 'rgba(252, 202, 3, 0.5)',
+                borderColor: 'rgba(252, 202, 3)',
+                borderWidth: 1
             }]
         }
 
-        let titleDate = date.split('-');
+        titleDate = date.split('-');
 
         const config = {
             type: 'bar',
             data,
             options: {
                 aspectRatio: 3,
-                barPercentage: 0.2,
+                barPercentage: 0.5,
                 plugins: {
                     legend: {
                         labels : {
@@ -138,10 +148,9 @@ function createChart(selectedID, date) {
             let points = graph.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
             if (points.length) {
                 const firstPoint = points[0];
-                const label = graph.data.labels[0];
                 const slabel = graph.data.datasets[firstPoint.datasetIndex].label;
                 const value = graph.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
-                console.log(label, slabel, value);
+                const label = value['y'];
                 back.style.position = '';
                 back.style.zIndex = '';
                 ctx.style.marginTop = '50px;'
@@ -156,23 +165,33 @@ function createChart(selectedID, date) {
                             option.setAttribute('value', job['id']);
                             option.innerText = job['job_id'];
                             editSessionJobId.appendChild(option);
-                            if (option.innerText == label) option.setAttribute('selected', 'true');
+                            if (option.innerText == label) option.setAttribute('selected', '');
                         })
                     })
                 }
                 else {
+                    let selectedJob = [...editSessionJobId.children].filter(job => job.innerText == label)[0];
+                    let otherJobs = [...editSessionJobId.children].filter(job => job != selectedJob);
+                    selectedJob.setAttribute('selected', '');
+                    otherJobs.forEach(job => job.removeAttribute('selected'));
                     workSessionHolder.style.display = 'none';
                     editWorkSessionHolder.style.display = 'flex';
                 }
-                console.log(value)
                 let start_time = value['x'][0];
                 let end_time = value['x'][1];
                 let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
-                let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
                 let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
-                let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
+                let start_sec = (start_time.getSeconds() < 10 ? '0' : '') + start_time.getSeconds();
+                workSessionId = sessions.filter(dict => dict['start_time'] == `${start_hour}:${start_min}:${start_sec}`)[0]['id'];
                 editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
-                editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                if (slabel == 'Completed') {
+                    let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
+                    let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
+                    editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                }
+                else {
+                    editSessionEnd.setAttribute('value', '');
+                }
             }
         })
     });
@@ -223,7 +242,6 @@ let backToDateSelect = () => {
 
 let backToChart = (currentPage) => {
     ctx = document.getElementById('myChart');
-    console.log(ctx)
     currentPage.style.display = '';
     workSessionHolder.style.display = 'flex';
     back.style.position = 'relative';
@@ -354,7 +372,7 @@ addSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'flex';
     successSessionsEdit.style.display = 'none';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.innerText}</span> on <span id="success-subject">${date}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
+    successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.innerText}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
 })
 
 successAddAnotherSession.addEventListener('click', () => {
@@ -444,7 +462,7 @@ editSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'none';
     successSessionsEdit.style.display = 'flex';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${editSessionJobId.innerText}</span> on <span id="success-subject">${date}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
+    successMessage.innerHTML = `Session for Job <span id="success-subject">${editSessionJobId.innerText}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
 })
 
 successBackToSessionsEdit.addEventListener('click', () => {

@@ -45,9 +45,10 @@ html, body {
     height: 50px;
     position: absolute;
     top: 0;
-    font-size: 25px;
+    font-size: 24px;
     background-color: transparent;
     text-decoration: underline;
+    text-underline-offset: 5px;
 }
 
 #home {

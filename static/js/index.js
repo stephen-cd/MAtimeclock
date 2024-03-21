@@ -1,13 +1,7 @@
-import { insertTimeRecords, deleteRecords, getEmployeeNames, getClockedInEmployees } from "./transactions.js";
+import { getEmployeeNames, getClockedInEmployees } from "./transactions.js";
 
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
-
-// let statement = `DELETE FROM timeclock_hours`;
-// db.run(statement, (err) => { if (err) return console.log(err.message); });
-
-// let statement = `INSERT INTO timeclock_employee (first_name, last_name, manager, pin) VALUES ("Dan", "Newman", "1", "1111")`;
-// db.run(statement, (err) => { if (err) return console.log(err.message); });
 
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');
@@ -24,9 +18,6 @@ let employeePins = employees.map(employee => employee['pin']);
 let backspace = document.getElementById('backspace');
 let currentlyClockedInEmployees = document.getElementById('currently-clocked-in-employees');
 sessionStorage.setItem('backToMO', 'false');
-
-// deleteRecords()
-// insertTimeRecords()
 
 function currentMsToTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
@@ -85,7 +76,7 @@ await getClockedInEmployees().then((res) => {
         hours.appendChild(document.createTextNode(':'));
         setInterval(() => {
             ++totalSeconds;
-            minutes.innerHTML = pad(parseInt(totalSeconds/60));
+            minutes.innerHTML = pad(parseInt(totalSeconds/60) % 60);
             hours.innerHTML = `${pad(parseInt(totalSeconds/3600))}:`;
         }, 1000)
     })
