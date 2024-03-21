@@ -33,7 +33,7 @@ html, body {
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job,
-#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit {
+#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);

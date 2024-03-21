@@ -3,6 +3,7 @@ let managerOptions1 = document.getElementById('manager-options-1');
 let back = document.getElementById('back');
 let managerOptions2 = document.getElementById('manager-options-2');
 let goToMO2 = document.getElementById('go-to-MO2');
+console.log(sessionStorage)
 
 back.addEventListener('click', () => {
     managerOptions1.style.display = 'flex';

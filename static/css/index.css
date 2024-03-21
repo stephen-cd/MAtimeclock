@@ -25,13 +25,13 @@ body {
 }
 
 #pin-section {
-    width: 70%;
+    width: 65%;
     height: 100%;
     border-right: 1px solid white;
 }
 
 #currently-working-section {
-    width: 30%;
+    width: 35%;
     height: 100%;
 }
 
@@ -99,6 +99,9 @@ body {
     font-size: 50px;
     border: 3px solid #1bb18b;
     cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .keypad-button:active {
@@ -114,6 +117,26 @@ button {
     position: absolute;
     bottom: 29px;
     height: 70px;
-    right: 241px;
+    right: 289px;
     scale: 0.7;
+}
+
+#currently-clocked-in-employees {
+    list-style: none;
+    text-align: left;
+    padding: 0;
+}
+
+.keypad-row, #pin-enter, #welcome-header {
+    transform: translateX(-30px);
+}
+
+#currently-clocked-in-employees li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+#currently-clocked-in-employees li span:nth-child(1) {
+    width: 50%;
 }

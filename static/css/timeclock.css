@@ -1,0 +1,140 @@
+html, body {
+    max-width: 800px;
+    max-height: 480px;
+    background-color: #5486d9;
+    color: white;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#logout {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    border: unset;
+    width: 100px;
+    height: 50px;
+    font-size: 24px;
+    text-decoration: underline;
+    color: white;
+    text-underline-offset: 5px;
+    text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5);
+    cursor: pointer
+}
+
+#back {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    border: unset;
+    width: 100px;
+    height: 50px;
+    font-size: 24px;
+    text-decoration: underline;
+    color: white;
+    text-underline-offset: 5px;
+    text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5);
+    cursor: pointer
+}
+
+.button-lg {
+    background-color: #13c296;
+    color: white;
+    text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
+    border-radius: 5px;
+    width: 550px;
+    height: 75px;
+    font-size: 50px;
+    border: unset;
+    cursor: pointer;
+}
+
+.button-md {
+    background-color: #13c296;
+    color: white;
+    text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
+    border-radius: 5px;
+    width: 350px;
+    height: 75px;
+    font-size: 40px;
+    border: unset;
+    cursor: pointer;
+}
+
+.button-sm {
+    background-color: #13c296;
+    color: white;
+    text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
+    border-radius: 5px;
+    width: 150px;
+    height: 60px;
+    font-size: 30px;
+    border: unset;
+    cursor: pointer;
+}
+
+#clock-into-jobs-holder, #success-holder {
+    display: none;
+}
+
+#welcome-holder {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#clock-into-jobs-holder {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    height: 90%;
+    margin: 0 50px;
+    gap: 20px;
+}
+
+#clock-into-jobs {
+    width: 500px;
+    height: 300px;
+    font-size: 25px;
+}
+
+#clock-into-jobs option {
+    height: 40px;
+    padding-top: 10px;
+}
+
+#clock-into-jobs:focus-visible {
+    outline: none;
+}
+
+#jobs-holder {
+    display: flex;
+    flex-direction: column;
+}
+
+#jobs-header {
+    font-size: 40px;
+    margin: 0;
+}
+
+#success-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+}
+
+#clock-into-job, #clock-out {
+    display: none;
+}

@@ -92,10 +92,12 @@ function createChart(selectedID, date) {
                         callbacks: {
                             label: ((tooltipItem, data) => {
                                 let start = tooltipItem['raw']['x'][0];
+                                let start_hour = (start.getHours() < 10 ? '0' : '') + start.getHours();
                                 let start_min = (start.getMinutes() < 10 ? '0' : '') + start.getMinutes();
                                 let end = tooltipItem['raw']['x'][1];
+                                let end_hour = (end.getHours() < 10 ? '0' : '') + end.getHours();
                                 let end_min = (end.getMinutes() < 10 ? '0' : '') + end.getMinutes();
-                                return `${start.getHours()}:${start_min} - ${end.getHours()}:${end_min}`;
+                                return `${start_hour}:${start_min} - ${end_hour}:${end_min}`;
                             })
                         }
                     },
@@ -136,7 +138,7 @@ function createChart(selectedID, date) {
             let points = graph.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
             if (points.length) {
                 const firstPoint = points[0];
-                const label = graph.data.labels[firstPoint.index];
+                const label = graph.data.labels[0];
                 const slabel = graph.data.datasets[firstPoint.datasetIndex].label;
                 const value = graph.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
                 console.log(label, slabel, value);
@@ -162,12 +164,15 @@ function createChart(selectedID, date) {
                     workSessionHolder.style.display = 'none';
                     editWorkSessionHolder.style.display = 'flex';
                 }
+                console.log(value)
                 let start_time = value['x'][0];
                 let end_time = value['x'][1];
+                let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
+                let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
                 let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
                 let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
-                editSessionStart.setAttribute('value', `${start_time.getHours()}:${start_min}`);
-                editSessionEnd.setAttribute('value', `${end_time.getHours()}:${end_min}`);
+                editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
+                editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
             }
         })
     });
@@ -187,9 +192,9 @@ await getEmployeeNames().then((res) => {
         let empEntry = {};
         empEntry['firstName'] = employee['first_name'];
         empEntry['lastName'] = employee['last_name'];
-        empDict[employee['uuid']] = empEntry;
+        empDict[employee['pin']] = empEntry;
         let option = document.createElement('option');
-        option.setAttribute('value', employee['uuid']);
+        option.setAttribute('value', employee['pin']);
         option.innerText = `${employee['first_name']} ${employee['last_name']}`;
         selectEmployee.appendChild(option);
     })
@@ -348,6 +353,7 @@ addSessionSubmit.addEventListener('click', () => {
     addWorkSessionHolder.style.display = '';
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'flex';
+    successSessionsEdit.style.display = 'none';
     successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.innerText}</span> on <span id="success-subject">${date}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
 })
 
@@ -360,16 +366,24 @@ successAddAnotherSession.addEventListener('click', () => {
 })
 
 successBackToSessionsAdd.addEventListener('click', () => {
+    addWorkSessionHolder.style.display = '';
+    let ctxHolder = ctx.parentElement;
+    ctx.remove();
+    ctx = document.createElement('canvas');
+    ctx.setAttribute('id', 'myChart');
+    ctxHolder.appendChild(ctx);
+    createChart(selectedID, date);
     back.removeEventListener('click', () => { backToChartInstance(currentPage) })
     back.addEventListener('click', backToDateSelectInstance);
     mainBody.style.display = '';
     workSessionHolder.style.display = 'flex';
     successBody.style.display = 'none';
-    successSessionsAdd.style.display = 'flex';
+    successSessionsAdd.style.display = 'none';
     successMessage.innerHTML = '';
     back.style.position = 'relative';
     back.style.zIndex = '1';
     ctx.style.marginTop = '0';
+    ctx.setAttribute('style', 'display: block; box-sizing: border-box; height: 262px; width: 786px; margin-top: 0;');
 })
 
 editSessionStart.addEventListener('click', () => {

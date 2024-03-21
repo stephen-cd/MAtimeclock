@@ -11,43 +11,41 @@
     <div id="main-body">
         <a href="manager.html"><button id="back" type="button">Back</button></a>
         <a href="index.html"><button id="home" type="button">Home</button></a>
-        <form method="post">
-            <div id="select-job-holder">
-                <div>
-                    <label for="select-job">Job</label>
-                    <select id="select-job"></select>
-                </div>
-                <button id="job-select-next" type="button">Next</button>
+        <div id="select-job-holder">
+            <div>
+                <label for="select-job">Job</label>
+                <select id="select-job"></select>
             </div>
-            <div id="edit-job-options">
-                <h1 id="editing-job"></h1>
-                <button id="change-job-id" type="button">Change Job ID</button>
-                <button id="complete-or-reopen-job" type="button"></button>
-                <button id="remove-job" type="button">Remove Job</button>
+            <button id="job-select-next" type="button">Next</button>
+        </div>
+        <div id="edit-job-options">
+            <h1 id="editing-job"></h1>
+            <button id="change-job-id" type="button">Change Job ID</button>
+            <button id="complete-or-reopen-job" type="button"></button>
+            <button id="remove-job" type="button">Remove Job</button>
+        </div>
+        <div id="keypad-holder" style="padding-top: 60px;">
+            <div id="job-enter">
+                <label id="job-label" for="job">Job ID:</label>
+                <input id="job" placeholder="Job ID">
+                <a><button id="edit-job-id" class="keypad-enter" type="button">Save</button></a>
             </div>
-            <div id="keypad-holder" style="padding-top: 60px;">
-                <div id="job-enter">
-                    <label id="job-label" for="job">Job ID:</label>
-                    <input id="job" placeholder="Job ID">
-                    <a><button id="edit-job-id" class="keypad-enter" type="button">Save</button></a>
-                </div>
-                <div id="keypad">
-                    <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
-                    <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
-                    <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
-                    <div id="backspace" class="keypad-button">&#x2190;</div>
-                    <div id="dash" class="keypad-button">-</div>
-                </div>
+            <div id="keypad">
+                <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
+                <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
+                <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
+                <div id="backspace" class="keypad-button">&#x2190;</div>
+                <div id="dash" class="keypad-button">-</div>
             </div>
-            <div id="complete-or-reopen-job-holder">
-                <h1></h1>
-                <button id="complete-or-reopen-job-enter" class="button-md" type="button"></button>
-            </div>
-            <div id="remove-job-holder">
-                <h1></h1>
-                <button id="remove-job-enter" class="button-md remove" style="background-color: red;" type="button">Remove</button>
-            </div>
-        </form>
+        </div>
+        <div id="complete-or-reopen-job-holder">
+            <h1></h1>
+            <button id="complete-or-reopen-job-enter" class="button-md" type="button"></button>
+        </div>
+        <div id="remove-job-holder">
+            <h1></h1>
+            <button id="remove-job-enter" class="button-md remove" style="background-color: red;" type="button">Remove</button>
+        </div>
     </div>
     <div id="success-body">
         <h1 id="success-message" class="success-message"></h1>
