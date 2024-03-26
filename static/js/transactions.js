@@ -28,6 +28,20 @@ async function getJobs() {
     })
 }
 
+// Select jobs from the past by selecting jobs that aren't in the jobs table
+async function getPastJobs() {
+    let statement = 'SELECT job_id FROM timeclock_job ORDER BY job_id';
+    let statement2 = `SELECT id, job_id FROM timeclock_hours WHERE job_id NOT IN (${statement}) ORDER BY job_id`;
+    return new Promise((resolve) => {
+        db.all(statement2, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    }).then((rows) => {
+        return rows
+    })
+}
+
 // Add an employee record to the DB
 function addEmployee(firstName, lastName, pin, manager) {
     let statement = `SELECT MAX(rec_id) as max_rec_id FROM timeclock_employee`;
@@ -54,9 +68,11 @@ function addJob(job_id) {
 }
 
 // Edit a job ID
-function editJobId(id, job_id) {
-    let statement = `UPDATE timeclock_job SET job_id="${job_id}" WHERE id="${id}"`;
+function editJobId(id, old_job_id, new_job_id) {
+    let statement = `UPDATE timeclock_job SET job_id="${new_job_id}" WHERE id="${id}"`;
+    let statement2 = `UPDATE timeclock_hours SET job_id="${new_job_id}" WHERE job_id="${old_job_id}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
+    db.run(statement2, (err) => { if (err) return console.log(err.message); });
 }
 
 // Edit a job status
@@ -162,4 +178,5 @@ async function getClockedInEmployees() {
 }
 
 export { getEmployeeNames, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
-         insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, getClockedInEmployees }
+         insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
+         getClockedInEmployees, getPastJobs }

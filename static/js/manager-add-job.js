@@ -10,7 +10,7 @@ let mainBody = document.getElementById('main-body')
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
     kpb.addEventListener('click', () => {
-        if (job.style.border) job.style.border = '';
+        if (job.style.outline) job.style.outline = '';
         job.value = job.value + kpb.innerText;
     })
 })
@@ -21,7 +21,7 @@ backspace.addEventListener('click', () => {
 
 enter.addEventListener('click', () => {
     if (!job.value) {
-        job.style.border = '2px solid red';
+        job.style.outline = '2px solid red';
         return;
     }
     addJob(job.value);

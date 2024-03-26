@@ -41,17 +41,17 @@ let backToNamesInstance = backToNames;
 let backToPINInstance = backToPIN;
 
 firstName.addEventListener('input', () => {
-    if (firstName.style.border) firstName.style.border = '';
+    if (firstName.style.outline) firstName.style.outline = '';
 })
 
 lastName.addEventListener('input', () => {
-    if (lastName.style.border) lastName.style.border = '';
+    if (lastName.style.outline) lastName.style.outline = '';
 })
 
 next.addEventListener('click', () => {
     if (!firstName.value || !lastName.value) {
-        if (!firstName.value) firstName.style.border = '2px solid red';
-        if (!lastName.value) lastName.style.border = '2px solid red';
+        if (!firstName.value) firstName.style.outline = '2px solid red';
+        if (!lastName.value) lastName.style.outline = '2px solid red';
         return;
     }
     addEmployeeInputs.style.display = 'none';
@@ -63,7 +63,7 @@ next.addEventListener('click', () => {
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
     kpb.addEventListener('click', () => {
-        if (pin.style.border) pin.style.border = '';
+        if (pin.style.outline) pin.style.outline = '';
         pin.value = pin.value + kpb.innerText;
     })
 })
@@ -74,7 +74,7 @@ backspace.addEventListener('click', () => {
 
 enter.addEventListener('click', () => {
     if (!pin.value) {
-        pin.style.border = '2px solid red';
+        pin.style.outline = '2px solid red';
         return;
     }
     if (empPin) {

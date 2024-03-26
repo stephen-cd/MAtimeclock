@@ -85,7 +85,7 @@ await getClockedInEmployees().then((res) => {
 // Add event listeners to each keypad button to append corresponding number to pin value when pressed
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
     kpb.addEventListener('click', () => {
-        if (pin.style.border) pin.style.border = '';
+        if (pin.style.outline) pin.style.outline = '';
         pin.value = pin.value + kpb.innerText;
     })
 })

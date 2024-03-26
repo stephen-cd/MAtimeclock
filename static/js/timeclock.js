@@ -76,7 +76,7 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
         })
         
         clockIntoJobs.addEventListener('change', () => {
-            if (clockIntoJobs.style.border) clockIntoJobs.style.border = '';
+            if (clockIntoJobs.style.outline) clockIntoJobs.style.outline = '';
             selectedJob = clockIntoJobs.value;
         })
         

@@ -71,6 +71,9 @@ let backToEditEmpOptions = () => {
     back.removeEventListener('click', backToEditEmpOptionsInstance);
     back.addEventListener('click', backToEmpSelectInstance);
     back.addEventListener('click', resetNameInstance);
+    empPin = '';
+    pin.value = '';
+    label.innerText = 'Emp. PIN:';
 }
 
 let resetName = () => {
@@ -105,10 +108,15 @@ editName.addEventListener('click', () => {
 })
 
 editNameEnter.addEventListener('click', () => {
-    editEmployeeName(selectedID, firstNameInput.value, lastNameInput.value);
-    successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
-    firstName = firstNameInput.value;
-    lastName = lastNameInput.value;
+    if (firstName == firstNameInput.value) successMessage.innerText = 'No changes detected.';
+    else { editEmployeeName(selectedID, firstNameInput.value, lastNameInput.value);
+        successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
+        firstName = firstNameInput.value;
+        lastName = lastNameInput.value;
+        sessionStorage['first_name'] = firstName;
+        sessionStorage['last_name'] = lastName;
+        editingEmp.innerText = `Editing for: ${firstName} ${lastName}`;
+    }
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
     successChangePin.parentElement.style.display = '';
@@ -125,7 +133,7 @@ editPin.addEventListener('click', () => {
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
     kpb.addEventListener('click', () => {
-        if (pin.style.border) pin.style.border = '';
+        if (pin.style.outline) pin.style.outline = '';
         pin.value = pin.value + kpb.innerText;
     })
 })
@@ -136,7 +144,7 @@ backspace.addEventListener('click', () => {
 
 editPinEnter.addEventListener('click', () => {
     if (!pin.value) {
-        pin.style.border = '2px solid red';
+        pin.style.outline = '2px solid red';
         return;
     }
     if (empPin) {
@@ -164,8 +172,6 @@ editPinEnter.addEventListener('click', () => {
         empPin = pin.value;
         pin.value = '';
         label.innerText = 'Confirm:';
-        back.removeEventListener('click', backToNamesInstance);
-        back.addEventListener('click', backToPINInstance);
     }
 })
 

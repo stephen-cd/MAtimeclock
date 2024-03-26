@@ -47,7 +47,7 @@ body {
 }
 
 #pin {
-    width: 250px;
+    width: 215px;
     height: 50px;
     text-indent: 5px;
 }
@@ -57,7 +57,7 @@ body {
 }
 
 #enter {
-    width: 120px;
+    width: 100px;
     height: 100%;
     background-color: #13c296;
     color: white;
@@ -75,16 +75,16 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 30px;
-    padding-top: 20px;
+    gap: 10px;
 }
 
 .keypad-row {
     display: flex;
-    justify-content: space-evenly;
+    gap: 5px;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    height: 70px;
+    height: 100px;
 }
 
 .keypad-button {
@@ -93,15 +93,15 @@ body {
     align-items: center;
     background-color: white;
     height: 100%;
-    width: 70px;
+    width: 20%;
     border-radius: 10px;
     color: #1bb18b;
-    font-size: 50px;
     border: 3px solid #1bb18b;
     cursor: pointer;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 70px;
 }
 
 .keypad-button:active {
@@ -115,9 +115,10 @@ button {
 
 #backspace {
     position: absolute;
-    bottom: 29px;
+    width: 75px;
+    bottom: -5px;
     height: 70px;
-    right: 289px;
+    right: 275px;
     scale: 0.7;
 }
 
@@ -125,10 +126,6 @@ button {
     list-style: none;
     text-align: left;
     padding: 0;
-}
-
-.keypad-row, #pin-enter, #welcome-header {
-    transform: translateX(-30px);
 }
 
 #currently-clocked-in-employees li {

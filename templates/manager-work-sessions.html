@@ -20,7 +20,17 @@
             <button id="emp-select-next" type="button">Next</button>
         </div>
         <div id="date-picker-holder" class="page">
-            <input id="date-picker" type="date">
+            <script src="https://cdn.jsdelivr.net/npm/js-datepicker@5.18.2/dist/datepicker.min.js"></script>
+            <link href="https://cdn.jsdelivr.net/npm/js-datepicker@5.18.2/dist/datepicker.min.css" rel="stylesheet">
+            <style>
+                .qs-datepicker-container {width: 100%; display: flex; top: 87px; left: 0; height: 262px; margin-top: 2px;}
+                .qs-square {height: 33px;}
+            </style>
+            <div id="date-picker-box">
+                <label for="date-picker">Date</label>
+                <input readonly id="date-picker" type="text">
+            </div>
+            <input hidden id="date-picker-hidden" type="text">
             <button id="date-select-next" type="button">Next</button>
         </div>
         <div id="work-session-holder">

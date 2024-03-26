@@ -11,6 +11,10 @@ html, body {
     overflow-y: hidden;
 }
 
+a {
+    text-decoration: none;
+}
+
 #manager-options-1, #manager-options-2, #MO-row1, #MO-row2, #add-employee-inputs, #edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #work-session-holder {
     display: flex;
     justify-content: center;
@@ -71,7 +75,13 @@ html, body {
     font-size: 50px;
 }
 
-#manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs {
+#manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #success-change-name, #add-other-emps, #manager-work-sessions {
+    width: 350px;
+    height: 100px;
+    font-size: 40px;
+}
+
+#success-change-pin, #edit-other-emps, #return-to-menu, #add-other-jobs {
     width: 350px;
     height: 75px;
     font-size: 40px;
@@ -93,16 +103,16 @@ html, body {
     transform: translateY(-3px);
 }
 
-#next, #emp-select-next, #job-select-next, #date-select-next, #add-work-session {
+#next, #emp-select-next, #job-select-next, #add-work-session, #date-select-next {
     width: 150px;
     height: 60px;
     font-size: 30px;
 }
 
 .edit-enter {
-    width: 250px;
-    height: 60px;
-    font-size: 30px;
+    width: 350px;
+    height: 75px;
+    font-size: 40px;
 }
 
 label {
@@ -132,7 +142,7 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
 }
 
 #enter, .keypad-enter {
-    width: 120px;
+    width: 100px;
     height: 100%;
     background-color: #13c296;
     color: white;
@@ -150,18 +160,16 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 30px;
-    padding-top: 20px;
     position: relative;
 }
 
 .keypad-row {
     display: flex;
+    gap: 5px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 70px;
-    gap: 50px;
+    height: 100px;
 }
 
 .keypad-button {
@@ -169,13 +177,16 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     justify-content: center;
     align-items: center;
     background-color: white;
-    height: 100%;
-    width: 70px;
+    height: 90%;
+    width: 12.5%;
     border-radius: 10px;
     color: #1bb18b;
-    font-size: 50px;
     border: 3px solid #1bb18b;
     cursor: pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 70px;
 }
 
 .keypad-button:active {
@@ -195,7 +206,7 @@ form {
 }
 
 #pins-do-not-match {
-    color: rgb(247, 100, 100);
+    color: red;
     text-align: center;
     font-size: 30px;
 }
@@ -217,9 +228,10 @@ button {
     height: 100%;
 }
 
-.success-message {
+#success-message {
     color: springgreen;
     text-align: center;
+    margin: 0 10px;
 }
 
 #success-subject {
@@ -235,6 +247,13 @@ button {
     justify-content: center;
     align-items: end;
     height: 90%;
+    margin: 0 50px;
+}
+
+#date-picker-holder {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
     margin: 0 50px;
 }
 
@@ -274,14 +293,14 @@ label[for=select-employee] {
 
 #dash {
     position: absolute;
-    bottom: 32px;
+    bottom: 100px;
     height: 70px;
     right: 35px;
 }
 
 #backspace {
     position: absolute;
-    bottom: 132px;
+    bottom: 1px;
     height: 70px;
     right: 35px;
 }
@@ -302,6 +321,7 @@ label[for=select-employee] {
     width: 350px;
     height: 75px;
     font-size: 40px;
+    text-decoration: none;
 }
 
 .page {
@@ -311,14 +331,11 @@ label[for=select-employee] {
 }
 
 #date-picker {
-    width: 400px;
-    height: 75px;
+    width: 500px;
+    height: 40px;
     font-size: 25px;
-    margin-bottom: 125px;
-}
-
-#date-picker-holder {
-    flex-direction: column;
+    border-radius: 10px;
+    border: unset;
 }
 
 #myChart {
@@ -363,4 +380,23 @@ label[for=select-employee] {
     justify-content: center;
     align-items: center;
     gap: 20px;
+}
+
+#welcome-message {
+    font-size: 40px;
+}
+
+#label[for=date-picker] {
+    text-align: left;
+}
+
+#date-picker-box {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-120px);
+}
+
+#date-select-next {
+    transform: translateY(156.5px);
+    width: 125px;
 }
