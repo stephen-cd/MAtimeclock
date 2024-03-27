@@ -75,13 +75,13 @@ a {
     font-size: 50px;
 }
 
-#manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #success-change-name, #add-other-emps, #manager-work-sessions {
+#manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #manager-work-sessions {
     width: 350px;
     height: 100px;
     font-size: 40px;
 }
 
-#success-change-pin, #edit-other-emps, #return-to-menu, #add-other-jobs {
+#success-change-pin, #edit-other-emps, #return-to-menu, #add-other-jobs, #success-change-name, #add-other-emps {
     width: 350px;
     height: 75px;
     font-size: 40px;
@@ -128,12 +128,19 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin: 20px 0;
+    margin-top: 30px;
+    margin-bottom: 5px;
 }
 
-#pin, #job {
+#job {
     width: 250px;
     height: 50px;
+    text-indent: 5px;
+}
+
+#pin {
+    width: 309px;
+    height: 30px;
     text-indent: 5px;
 }
 
@@ -141,7 +148,7 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     outline-color: #13c296;
 }
 
-#enter, .keypad-enter {
+.keypad-enter {
     width: 100px;
     height: 100%;
     background-color: #13c296;
@@ -149,10 +156,21 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
 }
 
-#pin, #enter, #edit-enter, #job, .keypad-enter {
+#pin, #edit-enter, #job, .keypad-enter {
     border-radius: 5px;
     border: unset;
     font-size: 25px;
+}
+
+#enter {
+    width: 100%;
+    height: 100%;
+    background-color: #13c296;
+    color: white;
+    text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
+    border-radius: 7.4px;
+    border: unset;
+    font-size: 30px;
 }
 
 #keypad {
@@ -298,13 +316,6 @@ label[for=select-employee] {
     right: 35px;
 }
 
-#backspace {
-    position: absolute;
-    bottom: 1px;
-    height: 70px;
-    right: 35px;
-}
-
 #no-emps, #no-jobs, #complete-or-reopen-job-holder, #remove-job-holder {
     display: none;
     height: 100%;
@@ -336,10 +347,6 @@ label[for=select-employee] {
     font-size: 25px;
     border-radius: 10px;
     border: unset;
-}
-
-#myChart {
-    margin-top: 50px;
 }
 
 #work-session-holder {
@@ -399,4 +406,14 @@ label[for=select-employee] {
 #date-select-next {
     transform: translateY(156.5px);
     width: 125px;
+}
+
+#complete-or-reopen-message, #remove-message {
+    text-align: center;
+}
+
+.keypad-button-enter {
+    height: 90%;
+    width: 12.5%;
+    border-radius: 10px;
 }

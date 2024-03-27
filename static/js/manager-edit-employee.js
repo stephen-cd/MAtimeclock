@@ -73,7 +73,7 @@ let backToEditEmpOptions = () => {
     back.addEventListener('click', resetNameInstance);
     empPin = '';
     pin.value = '';
-    label.innerText = 'Emp. PIN:';
+    pin.placeholder = 'PIN';
 }
 
 let resetName = () => {
@@ -154,7 +154,7 @@ editPinEnter.addEventListener('click', () => {
             setTimeout(() => {
                 pinEnter.style.display = 'flex';
                 pinsDoNotMatch.style.display = 'none';
-                label.innerText = 'Emp. PIN:';
+                pin.placeholder = 'PIN';
                 pin.value = '';
                 empPin = '';
                 back.parentElement.href = 'manager.html';
@@ -171,7 +171,7 @@ editPinEnter.addEventListener('click', () => {
     if (!empPin) {
         empPin = pin.value;
         pin.value = '';
-        label.innerText = 'Confirm:';
+        pin.placeholder = 'Confirm PIN';
     }
 })
 

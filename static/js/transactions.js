@@ -177,6 +177,19 @@ async function getClockedInEmployees() {
     })
 }
 
+// If there are work sessions in progress for a job, it shouldn't be able to be removed
+async function checkForInProgressWorkSessions(jobId) {
+    let statement = `SELECT * from timeclock_hours WHERE job_id="${jobId}" AND end_time=""`;
+    return new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    }).then((rows) => {
+        return rows;
+    })
+}
+
 export { getEmployeeNames, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
-         getClockedInEmployees, getPastJobs }
+         getClockedInEmployees, getPastJobs, checkForInProgressWorkSessions }

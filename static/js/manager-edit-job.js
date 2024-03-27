@@ -1,4 +1,4 @@
-import { getJobs, editJobId, editJobStatus, removeJob } from "./transactions.js";
+import { getJobs, editJobId, editJobStatus, removeJob, checkForInProgressWorkSessions } from "./transactions.js";
 
 let jobDict = {};
 let backspace = document.getElementById('backspace');
@@ -28,6 +28,9 @@ let successMessage = document.getElementById('success-message');
 let completeOrReopenJobEnter = document.getElementById('complete-or-reopen-job-enter');
 let removeJobEnter = document.getElementById('remove-job-enter');
 let editAnotherJob = document.getElementById('edit-another-job');
+let inProgressWorkSessions;
+let completeOrReopenMessage = document.getElementById('complete-or-reopen-message');
+let removeMessage = document.getElementById('remove-message');
 
 await getJobs().then((res) => {
     numberOfJobs = res.length;
@@ -71,29 +74,76 @@ let backToJobOptions = (currentPage) => {
 let backToJobSelectInstance = backToJobSelect;
 let backToJobOptionsInstance = backToJobOptions;
 
+selectJob.addEventListener('change', () => {
+    if (selectJob.style.outline) selectJob.style.outline = '';
+})
+
 jobSelectNext.addEventListener('click', () => {
+    let options = [...document.querySelectorAll('option')];
+    selectedID = options.filter(option => option.selected);
+
+    if (selectedID.length == 0) 
+        return selectJob.style.outline = '2px solid red';
+
+    selectedID = selectedID[0].value;
     selectJobHolder.style.display = 'none';
     editJobOptions.style.display = 'flex';
-    let options = [...document.querySelectorAll('option')];
-    selectedID = options.filter(option => option.selected)[0].value;
     jobId = jobDict[selectedID]['jobId'];
     status = jobDict[selectedID]['status'];
     editingJob.innerText = `Editing Job: ${jobId}`;
     if (status == 'active') {
         completeOrReopenJob.innerText = 'Complete Job';
-        completeOrReopenJobHolder.firstElementChild.innerHTML = `Change status of job ${jobId} to complete?`;
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
         completeOrReopenJobEnter.innerText = 'Complete'
     }
     else if (status == 'complete') {
         completeOrReopenJob.innerText = 'Reopen Job';
-        completeOrReopenJobHolder.firstElementChild.innerHTML = `Change status of job ${jobId} to active?`;
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
         completeOrReopenJobEnter.innerText = 'Reopen'
     }
-    removeJobHolder.firstElementChild.innerHTML = `Remove job ${jobId} from job list?<br>Work session data will be retained.`;
     back.addEventListener('click', backToJobSelectInstance);
     sessionStorage.setItem('backToMO', 'false');
     back.parentElement.removeAttribute('href');
     job.value = jobId;
+    console.log(jobDict)
+
+    if (!inProgressWorkSessions) {
+        checkForInProgressWorkSessions(jobId).then((res) => {
+            inProgressWorkSessions = res;
+            if (inProgressWorkSessions.length != 0) {
+                removeJobBtn.addEventListener('click', () => {
+                    removeJobBtn.innerText = 'Sessions Active';
+                    removeJobBtn.style.backgroundColor = 'red';
+                    setTimeout(() => {
+                        removeJobBtn.innerText = 'Remove Job';
+                        removeJobBtn.style.backgroundColor = '#13c296';
+                    }, 1000);
+                })
+            }
+            else {
+                removeJobBtn.addEventListener('click', () => {
+                    editJobOptions.style.display = 'none';
+                    removeJobHolder.style.display = 'flex';
+                    back.removeEventListener('click', backToJobSelectInstance)
+                    back.addEventListener('click', () => { backToJobOptions(removeJobHolder) });
+                    removeMessage.innerHTML = `Remove job ${jobId} from job list?<br>Work session data will be retained.`;
+                })
+                removeJobEnter.addEventListener('click', () => {
+                    removeJob(selectedID);
+                    successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.`;
+                    mainBody.style.display = 'none';
+                    successBody.style.display = 'flex';
+                    backToJob.style.display = 'none';
+                    let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
+                    selectJobOption.remove();
+                    if ([...selectJob.children].length == 0) {
+                        editAnotherJob.style.display = 'none'
+                    }
+                    delete jobDict[selectedID];
+                })
+            }
+        })
+    }
 })
 
 changeJobId.addEventListener('click', () => {
@@ -108,13 +158,6 @@ completeOrReopenJob.addEventListener('click', () => {
     completeOrReopenJobHolder.style.display = 'flex';
     back.removeEventListener('click', backToJobSelectInstance)
     back.addEventListener('click', () => { backToJobOptions(completeOrReopenJobHolder) });
-})
-
-removeJobBtn.addEventListener('click', () => {
-    editJobOptions.style.display = 'none';
-    removeJobHolder.style.display = 'flex';
-    back.removeEventListener('click', backToJobSelectInstance)
-    back.addEventListener('click', () => { backToJobOptions(removeJobHolder) });
 })
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
@@ -137,11 +180,20 @@ editJobIdEnter.addEventListener('click', () => {
     successMessage.innerHTML = `Job ID changed from <span id='success-subject'>${jobId}</span> to <span id='success-subject'>${job.value}</span> successfully.`;
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
+    jobDict[selectedID]['jobId'] = job.value;
     jobId = job.value;
-    completeOrReopenJobHolder.firstElementChild.firstElementChild.innerText = jobId;
-    removeJobHolder.firstElementChild.firstElementChild.innerText = jobId;
     backToJob.style.display = 'block';
     editAnotherJob.style.display = 'block';
+    if (status == 'active') {
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
+    }
+    else if (status == 'complete') {
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
+    }
+    editingJob.innerText = `Editing Job: ${jobId}`;
+    keypadHolder.style.display = 'none';
+    let selectedOption = [...selectJob.querySelectorAll('option')].filter(option => option.selected)[0];
+    selectedOption.innerText = `${jobId} ${status}`;
 })
 
 completeOrReopenJobEnter.addEventListener('click', () => {
@@ -150,7 +202,7 @@ completeOrReopenJobEnter.addEventListener('click', () => {
         successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> marked as complete successfully.`;
         status = 'complete'
         completeOrReopenJob.innerText = 'Reopen Job';
-        completeOrReopenJobHolder.firstElementChild.innerHTML = `Change status of job ${jobId} to active?`;
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
         completeOrReopenJobEnter.innerText = 'Reopen';
         let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
         selectJobOption.innerText = `${jobId} ${status}`;
@@ -161,7 +213,7 @@ completeOrReopenJobEnter.addEventListener('click', () => {
         successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> marked as active successfully.`;
         status = 'active';
         completeOrReopenJob.innerText = 'Complete Job'
-        completeOrReopenJobHolder.firstElementChild.innerHTML = `Change status of job ${jobId} to complete?`;
+        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
         completeOrReopenJobEnter.innerText = 'Complete';
         let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
         selectJobOption.innerText = `${jobId} ${status}`;
@@ -173,20 +225,6 @@ completeOrReopenJobEnter.addEventListener('click', () => {
     editAnotherJob.style.display = 'block';
 })
 
-removeJobEnter.addEventListener('click', () => {
-    removeJob(selectedID);
-    successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.`;
-    mainBody.style.display = 'none';
-    successBody.style.display = 'flex';
-    backToJob.style.display = 'none';
-    let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
-    selectJobOption.remove();
-    if ([...selectJob.children].length == 0) {
-        editAnotherJob.style.display = 'none'
-    }
-    delete jobDict[selectedID];
-})
-
 job.addEventListener('input', () => {
     if (job.style.outline) job.style.outline = '';
 })
@@ -195,9 +233,6 @@ backToJob.addEventListener('click', () => {
     successBody.style.display = 'none';
     mainBody.style.display = '';
     editJobOptions.style.display = 'flex';
-    jobId = job.value;
-    editingJob.innerText = `Editing Job: ${jobId}`;
-    job.value = jobId;
     back.removeEventListener('click', backToJobOptionsInstance);
     back.addEventListener('click', backToJobSelect);
 })

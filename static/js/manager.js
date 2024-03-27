@@ -8,6 +8,8 @@ let goToMO2 = document.getElementById('go-to-MO2');
 let managerName = sessionStorage['first_name'];
 let welcomeMessage = document.getElementById('welcome-message');
 let editJobs = document.getElementById('manager-edit-job');
+let jobs;
+let activeJobs;
 
 if (sessionStorage.getItem('backToMO') == 'true') {
     managerOptions1.style.display = 'none';
@@ -16,7 +18,8 @@ if (sessionStorage.getItem('backToMO') == 'true') {
 }
 
 getJobs().then((res) => {
-    sessionStorage['jobs'] = res.map(job => job['job_id']);
+    jobs = res.map(job => job['job_id']);
+    activeJobs = res.filter(job => job['status'] == 'active').map(job => job['job_id']);
 })
 
 welcomeMessage.innerText = `Welcome Manager - ${managerName}`;
@@ -28,7 +31,17 @@ back.addEventListener('click', () => {
 });
 
 timeClock.addEventListener('click', () => {
-    back.parentElement.href = 'manager.html';
+    if (activeJobs.length == 0) {
+        timeClock.parentElement.removeAttribute('href');
+        timeClock.style.backgroundColor = 'red';
+        timeClock.innerText = 'No Active Jobs';
+        setTimeout(() => {
+            timeClock.style.backgroundColor = '#13c296';
+            timeClock.innerText = 'Time Clock';
+        }, 1000);
+        return;
+    }
+    timeClock.parentElement.setAttribute('href', 'timeclock.html');
 })
 
 goToMO2.addEventListener('click', () => {
@@ -38,7 +51,7 @@ goToMO2.addEventListener('click', () => {
 })
 
 editJobs.addEventListener('click', () => {
-    if (sessionStorage['jobs'].length == 0) {
+    if (jobs.length == 0) {
         editJobs.parentElement.removeAttribute('href');
         editJobs.style.backgroundColor = 'red';
         editJobs.innerText = 'No Jobs';

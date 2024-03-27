@@ -332,6 +332,7 @@ datePickerNext.addEventListener('click', () => {
     createChart(selectedID, datePickerHidden.value);
     datePickerHolder.style.display = 'none';
     workSessionHolder.style.display = 'block';
+    back.style.position = 'relative';
 })
 
 addWorkSessionBtn.addEventListener('click', () => {
