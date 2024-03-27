@@ -1,4 +1,4 @@
-import { addEmployee } from './transactions.js';
+import { addEmployee, getEmployees } from './transactions.js';
 
 let firstName = document.getElementById('first-name');
 let lastName = document.getElementById('last-name');
@@ -19,6 +19,11 @@ let successMessage = document.getElementById('success-message');
 let mainBody = document.getElementById('main-body');
 let backspace = document.getElementById('backspace');
 window.sessionStorage['backToMO'] = true;
+let pins;
+
+getEmployees().then((res) => {
+    pins = res.map(employee => employee['pin']);
+})
 
 let backToNames = () => {
     addEmployeeInputs.style.display = 'flex';
@@ -74,6 +79,10 @@ backspace.addEventListener('click', () => {
 
 enter.addEventListener('click', () => {
     if (!pin.value) {
+        pin.style.outline = '2px solid red';
+        return;
+    }
+    if (pins.includes(pin.value)) {
         pin.style.outline = '2px solid red';
         return;
     }

@@ -1,4 +1,4 @@
-import { getEmployeeNames, editEmployeeName, editEmployeePin } from "./transactions.js";
+import { getEmployees, editEmployeeName, editEmployeePin } from "./transactions.js";
 
 let empDict = {};
 let selectEmployeeHolder = document.getElementById('select-employee-holder');
@@ -23,7 +23,6 @@ let keypadHolder = document.getElementById('keypad-holder');
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let editPinEnter = document.getElementById('enter');
 let pin = document.getElementById('pin');
-let label = document.getElementById('pin-label');
 let empPin;
 let pinEnter = document.getElementById('pin-enter');
 let pinsDoNotMatch = document.getElementById('pins-do-not-match');
@@ -33,8 +32,9 @@ let numberOfEmps;
 let backspace = document.getElementById('backspace');
 let noEmps = document.getElementById('no-emps');
 sessionStorage.setItem('backToMO', 'true');
+let pins;
 
-await getEmployeeNames().then((res) => {
+await getEmployees().then((res) => {
     numberOfEmps = res.length;
     if (numberOfEmps == 0) {
         mainBody.style.display = 'none';
@@ -43,11 +43,13 @@ await getEmployeeNames().then((res) => {
             window.location.href = '../templates/manager.html';
         }, 2000);
     }
-    numberOfEmps > 1 ? selectEmployee.setAttribute('size', numberOfEmps) : selectEmployee.setAttribute('size', 2)
+    numberOfEmps > 1 ? selectEmployee.setAttribute('size', numberOfEmps) : selectEmployee.setAttribute('size', 2);
+    pins = res.map(employee => employee['pin']);
     res.forEach(employee => {
         let empEntry = {};
         empEntry['firstName'] = employee['first_name'];
         empEntry['lastName'] = employee['last_name'];
+        empEntry['pin'] = employee['pin'];
         empDict[employee['id']] = empEntry;
         let option = document.createElement('option');
         option.setAttribute('value', employee['id']);
@@ -144,6 +146,10 @@ backspace.addEventListener('click', () => {
 
 editPinEnter.addEventListener('click', () => {
     if (!pin.value) {
+        pin.style.outline = '2px solid red';
+        return;
+    }
+    if (pins.includes(pin.value)) {
         pin.style.outline = '2px solid red';
         return;
     }

@@ -22,18 +22,16 @@
             </div>
             <button id="next" type="button">Next</button>
         </div>
-        <div id="keypad-holder" style="padding-top: 60px;">
+        <div id="keypad-holder">
             <div id="pin-enter">
-                <label id="pin-label" for="pin">Emp. PIN:</label>
                 <input id="pin" type="password" placeholder="PIN">
-                <a><button id="enter" type="button">Enter</button></a>
             </div>
             <h3 id="pins-do-not-match">Pins do not match, please enter again.</h3>
             <div id="keypad">
                 <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
                 <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
                 <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
-                <div id="backspace" class="keypad-button">&#x2190;</div>
+                <div class="keypad-row"><div id="backspace" class="keypad-button">&#x2190;</div><div class="keypad-button">0</div><a class="keypad-button-enter"><button id="enter">Enter</button></a></div>
             </div>
         </div>
     </div>

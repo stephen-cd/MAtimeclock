@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
 
 // Select employee records
-async function getEmployeeNames() {
+async function getEmployees() {
     let statement = 'SELECT id, first_name, last_name, pin, manager FROM timeclock_employee WHERE pin != "" ORDER BY first_name';
     return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
@@ -190,6 +190,6 @@ async function checkForInProgressWorkSessions(jobId) {
     })
 }
 
-export { getEmployeeNames, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
+export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
          getClockedInEmployees, getPastJobs, checkForInProgressWorkSessions }

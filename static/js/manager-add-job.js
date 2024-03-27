@@ -1,4 +1,4 @@
-import { addJob } from "./transactions.js";
+import { addJob, getJobs } from "./transactions.js";
 
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let job = document.getElementById('job');
@@ -7,6 +7,11 @@ let successMessage = document.getElementById('success-message');
 let enter = document.getElementById('enter');
 let backspace = document.getElementById('backspace');
 let mainBody = document.getElementById('main-body')
+let jobs;
+
+getJobs().then((res) => {
+    jobs = res.map(job => job['job_id']);
+})
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {
     kpb.addEventListener('click', () => {
@@ -21,6 +26,10 @@ backspace.addEventListener('click', () => {
 
 enter.addEventListener('click', () => {
     if (!job.value) {
+        job.style.outline = '2px solid red';
+        return;
+    }
+    if (jobs.includes(job.value)) {
         job.style.outline = '2px solid red';
         return;
     }

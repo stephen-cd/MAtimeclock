@@ -1,4 +1,4 @@
-import { getEmployeeNames, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession, getPastJobs } from "./transactions.js";
+import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession, getPastJobs } from "./transactions.js";
 const datepicker = require('js-datepicker');
 
 let empDict = {};
@@ -247,7 +247,7 @@ function createChart(selectedID, date) {
     });
 }
 
-await getEmployeeNames().then((res) => {
+await getEmployees().then((res) => {
     numberOfEmps = res.length;
     if (numberOfEmps == 0) {
         mainBody.style.display = 'none';

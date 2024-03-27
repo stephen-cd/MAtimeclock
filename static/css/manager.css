@@ -138,7 +138,7 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     text-indent: 5px;
 }
 
-#pin {
+#pin, #job {
     width: 309px;
     height: 30px;
     text-indent: 5px;
@@ -162,7 +162,7 @@ input:focus-visible, #pin:focus-visible, #add-session-job-id, #edit-session-job-
     font-size: 25px;
 }
 
-#enter {
+#enter, #edit-job-id {
     width: 100%;
     height: 100%;
     background-color: #13c296;
@@ -307,13 +307,6 @@ label[for=select-employee] {
 
 #keypad-holder, #complete-or-reopen-job-holder, #remove-job-holder {
     flex-direction: column;
-}
-
-#dash {
-    position: absolute;
-    bottom: 100px;
-    height: 70px;
-    right: 35px;
 }
 
 #no-emps, #no-jobs, #complete-or-reopen-job-holder, #remove-job-holder {

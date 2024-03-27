@@ -1,4 +1,4 @@
-import { getEmployeeNames, getClockedInEmployees } from "./transactions.js";
+import { getEmployees, getClockedInEmployees } from "./transactions.js";
 
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
@@ -8,7 +8,7 @@ let enter = document.getElementById('enter');
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let employeeList;
 // Retrieve the employees
-await getEmployeeNames().then((res) => {
+await getEmployees().then((res) => {
     employeeList = res;
 });
 let admins = employeeList.filter(employee => employee['manager']);

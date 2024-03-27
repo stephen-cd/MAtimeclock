@@ -31,17 +31,12 @@ let editAnotherJob = document.getElementById('edit-another-job');
 let inProgressWorkSessions;
 let completeOrReopenMessage = document.getElementById('complete-or-reopen-message');
 let removeMessage = document.getElementById('remove-message');
+let jobIds;
 
 await getJobs().then((res) => {
     numberOfJobs = res.length;
-    // if (numberOfJobs == 0) {
-    //     mainBody.style.display = 'none';
-    //     noJobs.style.display = 'flex';
-    //     setTimeout(() => {
-    //         window.location.href = '../templates/manager.html';
-    //     }, 2000);
-    // }
-    numberOfJobs > 1 ? selectJob.setAttribute('size', numberOfJobs) : selectJob.setAttribute('size', 2)
+    numberOfJobs > 1 ? selectJob.setAttribute('size', numberOfJobs) : selectJob.setAttribute('size', 2);
+    jobIds = res.map(job => job['job_id']);
     res.forEach(job => {
         let jobEntry = {};
         jobEntry['jobId'] = job['job_id'];
@@ -173,6 +168,10 @@ backspace.addEventListener('click', () => {
 
 editJobIdEnter.addEventListener('click', () => {
     if (!job.value || jobId == job.value) {
+        job.style.outline = '2px solid red';
+        return;
+    }
+    if (jobIds.includes(job.value)) {
         job.style.outline = '2px solid red';
         return;
     }
