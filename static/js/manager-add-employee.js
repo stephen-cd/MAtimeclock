@@ -38,7 +38,7 @@ let backToNames = () => {
 let backToPIN = () => {
     empPin = '';
     pin.value = '';
-    label.innerText = 'Emp. PIN:';
+    pin.placeholder = 'Enter PIN for new emp.';
     back.addEventListener('click', backToNamesInstance);
 }
 
@@ -93,7 +93,7 @@ enter.addEventListener('click', () => {
             setTimeout(() => {
                 pinEnter.style.display = 'flex';
                 pinsDoNotMatch.style.display = 'none';
-                label.innerText = 'Emp. PIN:';
+                pin.placeholder = 'Enter PIN for new emp.';
                 pin.value = '';
                 empPin = '';
                 back.parentElement.href = 'manager.html';
@@ -108,7 +108,7 @@ enter.addEventListener('click', () => {
     if (!empPin) {
         empPin = pin.value;
         pin.value = '';
-        label.innerText = 'Confirm:';
+        pin.placeholder = 'Confirm PIN for new emp.';
         back.removeEventListener('click', backToNamesInstance);
         back.addEventListener('click', backToPINInstance);
     }
