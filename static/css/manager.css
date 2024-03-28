@@ -410,3 +410,9 @@ label[for=select-employee] {
     width: 12.5%;
     border-radius: 10px;
 }
+
+.edit-work-session-input-holder { 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
