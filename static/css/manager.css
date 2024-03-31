@@ -1,3 +1,4 @@
+
 html, body {
     max-width: 800px;
     max-height: 480px;
@@ -415,4 +416,13 @@ label[for=select-employee] {
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.manager-add-employee-main-body {
+	margin-top:4%;
+}
+
+.simple-keyboard {
+    background-color: #5486d9;
+    color: black;
 }

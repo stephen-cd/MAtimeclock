@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/manager.css">
+	<link rel="stylesheet" href="../node_modules/simple-keyboard/build/css/index.css">
     <script src="../static/js/manager-add-employee.js" type="module" defer></script>
     <title>Manager - Add Employee</title>
 </head>
 <body>
     <a href="index.html"><button id="home">Log Out</button></a>
-    <div id="main-body">
+    <div class="manager-add-employee-main-body" id="main-body">
         <a href="manager.html" type="button"><button id="back">Back</button></a>
         <div id="add-employee-inputs">
             <div>
                 <label for="first-name">First Name:</label>
-                <input id="first-name" type="text">
+                <input class="input" id="first-name" type="text">
             </div>
             <div>
                 <label for="last-name">Last Name:</label>
-                <input id="last-name" type="text">
+                <input class="input" id="last-name" type="text">
             </div>
+	      <div class="simple-keyboard"></div>
             <button id="next" type="button">Next</button>
         </div>
         <div id="keypad-holder">
@@ -40,5 +42,79 @@
         <a href="manager-add-employee.html"><button id="add-other-emps" type="button">Add Another Emp.</button></a>
         <a href="manager.html"><button id="return-to-menu" type="button">Return to Menu</button></a>
     </div>
+<script src="../node_modules/simple-keyboard/build/index.js"></script>
+<script>
+const Keyboard = window.SimpleKeyboard.default;
+
+	/*
+const myKeyboard = new Keyboard({
+  onChange: input => onChange(input),
+  onKeyPress: button => onKeyPress(button)
+});
+
+function onChange(input) {
+  document.querySelector(".input").value = input;
+  console.log("Input changed", input);
+}
+
+
+
+function onKeyPress(button) {
+  console.log("Button pressed", button);
+}
+       */
+	/* multiple */
+
+let selectedInput;
+
+let keyboard = new Keyboard({
+  onChange: input => onChange(input),
+  onKeyPress: button => onKeyPress(button)
+});
+
+document.querySelectorAll(".input").forEach(input => {
+  input.addEventListener("focus", onInputFocus);
+  // Optional: Use if you want to track input changes
+  // made without simple-keyboard
+  input.addEventListener("input", onInputChange);
+});
+
+function onInputFocus(event) {
+  selectedInput = `#${event.target.id}`;
+
+  keyboard.setOptions({
+    inputName: event.target.id
+  });
+
+  /**
+   * Shift functionality
+   */
+  if (button === "{lock}" || button === "{shift}") handleShiftButton();
+}
+
+function onInputChange(event) {
+  keyboard.setInput(event.target.value, event.target.id);
+}
+
+function onChange(input) {
+  console.log("Input changed", input);
+  document.querySelector(selectedInput || ".input").value = input;
+}
+
+function onKeyPress(button) {
+  console.log("Button pressed", button);
+}
+
+function handleShiftButton() {
+  let currentLayout = keyboard.options.layoutName;
+  let shiftToggle = currentLayout === "default" ? "shift" : "default";
+
+  keyboard.setOptions({
+    layoutName: shiftToggle
+  });
+}
+
+
+</script>
 </body>
 </html>
