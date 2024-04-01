@@ -314,6 +314,16 @@ let backToChart = (currentPage) => {
     ctx.style.marginTop = '0';
     back.removeEventListener('click', backToChartInstance);
     back.addEventListener('click', backToDateSelectInstance);
+    if (currentPage == addWorkSessionHolder) {
+        if (addSessionJobId.style.outline) addSessionJobId.style.outline = '';
+        if (addSessionStart.style.outline) addSessionStart.style.outline = '';
+        if (addSessionEnd.style.outline) addSessionEnd.style.outline = '';
+    }
+    if (currentPage == editWorkSessionHolder) {
+        if (editSessionJobId.style.outline) editSessionJobId.style.outline = '';
+        if (editSessionStart.style.outline) editSessionStart.style.outline = '';
+        if (editSessionStart.style.outline) editSessionEnd.style.outline = '';
+    }
 }
 
 let backToEditSession = () => {

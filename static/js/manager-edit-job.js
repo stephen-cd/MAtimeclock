@@ -60,8 +60,11 @@ let backToJobSelect = () => {
 let backToJobOptions = (currentPage) => {
     editJobOptions.style.display = 'flex';
     currentPage.style.display = 'none';
-    if (currentPage == keypadHolder) job.value = jobId;
-    back.removeEventListener('click', backToJobOptionsInstance);
+    if (currentPage == keypadHolder) {
+        job.value = jobId;
+        if (job.style.outline) job.style.outline = '';
+    }
+    back.removeEventListener('click', () => { backToJobOptions(currentPage) });
     back.addEventListener('click', backToJobSelect);
 }
 

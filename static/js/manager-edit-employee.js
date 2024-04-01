@@ -68,15 +68,23 @@ let backToEmpSelect = () => {
     setTimeout(() => { back.parentElement.setAttribute('href', 'manager.html'); }, 200);
 }
 
-let backToEditEmpOptions = () => {
+let backToEditEmpOptions = (currentPage) => {
     editEmpOptions.style.display = 'flex';
-    nameInputs.style.display = 'none';
-    back.removeEventListener('click', backToEditEmpOptionsInstance);
+    if (currentPage == nameInputs) {
+        nameInputs.style.display = 'none';
+        if (firstNameInput.style.outline) firstNameInput.style.outline = '';
+        if (lastNameInput.style.outline) lastNameInput.style.outline = '';
+    }
+    if (currentPage == keypadHolder) {
+        keypadHolder.style.display = 'none';
+        empPin = '';
+        pin.value = '';
+        pin.placeholder = 'Enter new PIN for emp.';
+        if (pin.style.outline) pin.style.outline = '';
+    }
+    back.removeEventListener('click', () => { backToEditEmpOptions(currentPage) });
     back.addEventListener('click', backToEmpSelectInstance);
     back.addEventListener('click', resetNameInstance);
-    empPin = '';
-    pin.value = '';
-    pin.placeholder = 'Enter new PIN for emp.';
 }
 
 let resetName = () => {
@@ -108,10 +116,23 @@ editName.addEventListener('click', () => {
     firstNameInput.value = firstName;
     lastNameInput.value = lastName;
     back.removeEventListener('click', backToEmpSelectInstance);
-    back.addEventListener('click', backToEditEmpOptionsInstance);
+    back.addEventListener('click', () => { backToEditEmpOptions(nameInputs) });
+})
+
+firstNameInput.addEventListener('input', () => {
+    if (firstNameInput.style.outline) firstNameInput.style.outline = '';
+})
+
+lastNameInput.addEventListener('input', () => {
+    if (lastNameInput.style.outline) lastNameInput.style.outline = '';
 })
 
 editNameEnter.addEventListener('click', () => {
+    if (!firstNameInput.value || !lastNameInput.value) {
+        if (!firstNameInput.value) firstNameInput.style.outline = '2px solid red';
+        if (!lastNameInput.value) lastNameInput.style.outline = '2px solid red';
+        return;
+    }
     if (firstName == firstNameInput.value) successMessage.innerText = 'No changes detected.';
     else { editEmployeeName(originalPin, firstNameInput.value, lastNameInput.value);
         successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
@@ -132,7 +153,7 @@ editPin.addEventListener('click', () => {
     keypadHolder.style.display = 'flex';
     editEmpOptions.style.display = 'none';
     back.removeEventListener('click', backToEmpSelectInstance);
-    back.addEventListener('click', backToEditEmpOptionsInstance);
+    back.addEventListener('click', () => { backToEditEmpOptions(keypadHolder) });
 })
 
 keypadButtons.filter(kpb => kpb.id != 'backspace').forEach(kpb => {

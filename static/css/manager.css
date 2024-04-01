@@ -405,7 +405,16 @@ label[for=select-employee] {
     text-align: center;
 }
 
-.keypad-button-enter {
+.keypad-button-enter-job {
+    position: absolute;
+    height: 23%;
+    width: 12.5%;
+    border-radius: 10px;
+    bottom: 4px;
+    right: 127.5px;
+}
+
+.keypad-button-enter-emp {
     height: 90%;
     width: 12.5%;
     border-radius: 10px;

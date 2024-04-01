@@ -8,7 +8,6 @@ let addEmployeeInputs = document.getElementById('add-employee-inputs');
 let keypadHolder = document.getElementById('keypad-holder');
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let pin = document.getElementById('pin');
-let label = document.getElementById('pin-label');
 let empPin;
 let pinEnter = document.getElementById('pin-enter');
 let pinsDoNotMatch = document.getElementById('pins-do-not-match');
@@ -33,17 +32,16 @@ let backToNames = () => {
     }, 200);
     back.removeEventListener('click', backToNamesInstance);
     window.sessionStorage['backToMO'] = true;
+    if (pin.style.outline) pin.style.outline = '';
+    if (empPin) {
+        empPin = '';
+        pin.value = '';
+        pin.placeholder = 'Enter PIN for new emp.';
+    }
 }
 
-let backToPIN = () => {
-    empPin = '';
-    pin.value = '';
-    pin.placeholder = 'Enter PIN for new emp.';
-    back.addEventListener('click', backToNamesInstance);
-}
 
 let backToNamesInstance = backToNames;
-let backToPINInstance = backToPIN;
 
 firstName.addEventListener('input', () => {
     if (firstName.style.outline) firstName.style.outline = '';
@@ -109,7 +107,5 @@ enter.addEventListener('click', () => {
         empPin = pin.value;
         pin.value = '';
         pin.placeholder = 'Confirm PIN for new emp.';
-        back.removeEventListener('click', backToNamesInstance);
-        back.addEventListener('click', backToPINInstance);
     }
 })
