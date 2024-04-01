@@ -1,4 +1,4 @@
-import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession } from "./transactions.js";
+import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession, deleteWorkSession } from "./transactions.js";
 const datepicker = require('js-datepicker');
 
 let empDict = {};
@@ -39,15 +39,23 @@ let successSessionsAdd = document.getElementById('success-sessions-add');
 let successSessionsEdit = document.getElementById('success-sessions-edit');
 let titleDate;
 let datePickerHidden = document.getElementById('date-picker-hidden');
+let deleteSessionBtn = document.getElementById('delete-session');
+let deleteWorkSessionHolder = document.getElementById('delete-work-session-holder');
+let deleteSessionDate = document.getElementById('delete-session-date');
+let deleteSessionEmp = document.getElementById('delete-session-emp');
+let deleteSessionJobHours = document.getElementById('delete-session-job-hours');
+let deleteSessionSubmit = document.getElementById('delete-session-submit');
 
 const picker = datepicker('#date-picker', {
     onSelect: (instance, date) => {
         if (datePicker.style.outline) datePicker.style.outline = '';
-        let month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
-        let day = (date.getDate() < 10 ? '0' : '') + date.getDate();
-        let year = date.getFullYear();
-        datePicker.value = `${month}/${day}/${year}`;
-        datePickerHidden.value = `${year}-${month}-${day}`;
+        if (date) {
+            let month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
+            let day = (date.getDate() < 10 ? '0' : '') + date.getDate();
+            let year = date.getFullYear();
+            datePicker.value = `${month}/${day}/${year}`;
+            datePickerHidden.value = `${year}-${month}-${day}`;
+        }
     }
 });
 
@@ -308,9 +316,19 @@ let backToChart = (currentPage) => {
     back.addEventListener('click', backToDateSelectInstance);
 }
 
+let backToEditSession = () => {
+    deleteWorkSessionHolder.style.display = 'none';
+    editWorkSessionHolder.style.display = 'none';
+    mainBody.style.display = 'block';
+    successSessionsEdit.style.display = 'none';
+    back.removeEventListener('click', backToEditSessionInstance);
+    back.addEventListener('click', backToChartInstance);
+}
+
 let backToEmpSelectInstance = backToEmpSelect;
 let backToDateSelectInstance = backToDateSelect;
 let backToChartInstance = backToChart;
+let backToEditSessionInstance = backToEditSession;
 
 selectEmployee.addEventListener('change', () => {
     if (selectEmployee.style.outline) selectEmployee.style.outline = '';
@@ -521,4 +539,28 @@ successBackToSessionsEdit.addEventListener('click', () => {
     back.style.zIndex = '1';
     ctx.style.marginTop = '0';
     ctx.setAttribute('style', 'display: block; box-sizing: border-box; height: 262px; width: 786px; margin-top: 0;');
+})
+
+deleteSessionBtn.addEventListener('click', () => {
+    editWorkSessionHolder.style.display = 'none';
+    deleteWorkSessionHolder.style.display = 'flex';
+    deleteSessionDate.innerText = `${titleDate[1]}/${titleDate[2]}/${titleDate[0]}`;
+    deleteSessionEmp.innerText = `${firstName} ${lastName}`;
+    let selectedJob = [...editSessionJobId.children].filter(job => job.selected)[0].innerText;
+    let startTime = new Date(`${datePickerHidden.value}T${editSessionStart.value}`);
+    startTime = startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    let endTime = new Date(`${datePickerHidden.value}T${editSessionEnd.value}`);
+    endTime = endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    deleteSessionJobHours.innerText = `Job ${selectedJob}: ${startTime} - ${endTime}`;
+    back.removeEventListener('click', backToChartInstance);
+    back.addEventListener('click', backToEditSessionInstance);
+})
+
+deleteSessionSubmit.addEventListener('click', () => {
+    deleteWorkSession(workSessionId);
+    deleteWorkSessionHolder.style.display = 'none';
+    successBody.style.display = 'flex';
+    successMessage.innerHTML = 'Work session deleted successfully';
+    mainBody.style.display = 'none';
+    successSessionsEdit.style.display = 'flex';
 })

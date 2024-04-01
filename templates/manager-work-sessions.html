@@ -70,12 +70,22 @@
                 <label for="edit-session-start">Start:</label>
                 <input id="edit-session-start" type="time">
             </div>
-            <div class="edit-work-session-input-holder">
+            <div class="edit-work-session-input-holder" style="margin-bottom: 25px;">
                 <label for="edit-session-end">End:</label>
                 <input id="edit-session-end" type="time">
             </div>
-            <button id="edit-session-submit" class="button-md" type="button">Save Changes</button>
+            <div style="display: flex; gap: 20px;">
+                <button id="edit-session-submit" class="button-md" type="button">Save Changes</button>
+                <button id="delete-session" class="button-md" style="background-color: red;" type="button">Delete</button>
+            </div>
             <h1 id="error-message"></h1>
+        </div>
+        <div id="delete-work-session-holder">
+            <h1 id="delete-session-header">Delete work session?</h1>
+            <h1 id="delete-session-date" style="margin: 0;"></h1>
+            <h1 id="delete-session-emp" style="margin: 0;"></h1>
+            <h1 id="delete-session-job-hours" style="margin: 0 0 50px 0;"></h1>
+            <button id="delete-session-submit" class="button-md" style="background-color: red;" type="button">Delete</button>
         </div>
     </div>
     <div id="success-body">

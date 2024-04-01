@@ -128,7 +128,12 @@ function addWorkSession(pin, date, jobId, startTime, endTime) {
 // Edit work session
 function editWorkSession(id, jobId, startTime, endTime) {
     let statement = `UPDATE timeclock_hours SET job_id="${jobId}", start_time="${startTime}", end_time="${endTime}" WHERE id="${id}"`;
-    console.log(statement)
+    db.run(statement, (err) => { if (err) return console.log(err.message); });
+}
+
+// Delete work session
+function deleteWorkSession(id) {
+    let statement = `DELETE FROM timeclock_hours WHERE id="${id}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
 
@@ -197,4 +202,4 @@ async function checkForInProgressWorkSessions(jobId) {
 
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
-         getClockedInEmployees, checkForInProgressWorkSessions }
+         getClockedInEmployees, checkForInProgressWorkSessions, deleteWorkSession }

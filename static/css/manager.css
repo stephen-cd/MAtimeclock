@@ -22,7 +22,7 @@ a {
     gap: 25px;
 }
 
-#manager-options-1, #manager-options-2, #add-employee-inputs, #add-work-session-holder, #edit-work-session-holder {
+#manager-options-1, #manager-options-2, #add-employee-inputs, #add-work-session-holder, #edit-work-session-holder, #delete-work-session-holder {
     flex-direction: column;
     height: 100%;
 }
@@ -290,7 +290,7 @@ button {
     outline: none;
 }
 
-#edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #date-picker-holder, #work-session-holder, #add-work-session-holder, #edit-work-session-holder {
+#edit-employee-options, #edit-employee-name-inputs, #edit-job-options, #date-picker-holder, #work-session-holder, #add-work-session-holder, #edit-work-session-holder, #delete-work-session-holder {
     display: none;
 }
 
@@ -415,4 +415,9 @@ label[for=select-employee] {
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+#delete-work-session-holder {
+    justify-content: center;
+    align-items: center;
 }
