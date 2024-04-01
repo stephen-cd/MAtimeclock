@@ -9,6 +9,8 @@ let backspace = document.getElementById('backspace');
 let mainBody = document.getElementById('main-body')
 let jobs;
 
+sessionStorage['backToMO'] = 'true';
+
 getJobs().then((res) => {
     jobs = res.map(job => job['job_id']);
 })

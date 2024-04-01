@@ -33,6 +33,7 @@ let backspace = document.getElementById('backspace');
 let noEmps = document.getElementById('no-emps');
 sessionStorage.setItem('backToMO', 'true');
 let pins;
+let originalPin;
 
 await getEmployees().then((res) => {
     numberOfEmps = res.length;
@@ -50,9 +51,9 @@ await getEmployees().then((res) => {
         empEntry['firstName'] = employee['first_name'];
         empEntry['lastName'] = employee['last_name'];
         empEntry['pin'] = employee['pin'];
-        empDict[employee['id']] = empEntry;
         let option = document.createElement('option');
-        option.setAttribute('value', employee['id']);
+        option.setAttribute('value', res.indexOf(employee));
+        empDict[res.indexOf(employee)] = empEntry;
         option.innerText = `${employee['first_name']} ${employee['last_name']}`;
         selectEmployee.appendChild(option);
     })
@@ -98,6 +99,7 @@ empSelectNext.addEventListener('click', () => {
     back.addEventListener('click', backToEmpSelectInstance);
     sessionStorage.setItem('backToMO', 'false');
     back.parentElement.removeAttribute('href');
+    originalPin = empDict[selectedID]['pin'];
 })
 
 editName.addEventListener('click', () => {
@@ -111,7 +113,7 @@ editName.addEventListener('click', () => {
 
 editNameEnter.addEventListener('click', () => {
     if (firstName == firstNameInput.value) successMessage.innerText = 'No changes detected.';
-    else { editEmployeeName(selectedID, firstNameInput.value, lastNameInput.value);
+    else { editEmployeeName(originalPin, firstNameInput.value, lastNameInput.value);
         successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
         firstName = firstNameInput.value;
         lastName = lastNameInput.value;
@@ -167,7 +169,7 @@ editPinEnter.addEventListener('click', () => {
             }, 2000);
             return;
         }
-        editEmployeePin(selectedID, empPin);
+        editEmployeePin(originalPin, empPin);
         successMessage.innerHTML = `PIN for <span id='success-subject'>${firstName} ${lastName}</span> changed successfully.`;
         mainBody.style.display = 'none';
         successBody.style.display = 'flex';

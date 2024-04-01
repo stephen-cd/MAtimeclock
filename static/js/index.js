@@ -3,6 +3,9 @@ import { getEmployees, getClockedInEmployees } from "./transactions.js";
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
 
+// let statement = 'INSERT INTO timeclock_employee (pin, first_name, last_name, manager) VALUES ("1111", "Dan", "Newman", "1")'
+// db.run(statement)
+
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
@@ -10,6 +13,7 @@ let employeeList;
 // Retrieve the employees
 await getEmployees().then((res) => {
     employeeList = res;
+    console.log(res)
 });
 let admins = employeeList.filter(employee => employee['manager']);
 let employees = employeeList.filter(employee => !employee['manager']);

@@ -1,4 +1,4 @@
-import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession, getPastJobs } from "./transactions.js";
+import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession } from "./transactions.js";
 const datepicker = require('js-datepicker');
 
 let empDict = {};
@@ -56,28 +56,28 @@ async function appendAllJobs(jobIdInput, label='') {
         getJobs().then((res) => {
             res.forEach(job => {
                 let option = document.createElement('option');
-                option.setAttribute('value', job['id']);
+                option.setAttribute('value', job['job_id']);
                 option.innerText = job['job_id'];
                 jobIdInput.appendChild(option);
                 if (label && option.innerText == label) option.setAttribute('selected', 'true');
             })
+            resolve([...jobIdInput.children]);
         })
-        getPastJobs().then((res) => {
-            let currentJobs = [...jobIdInput.children].map(option => option.innerText);
-            let pastJobs = [];
-            res.forEach(job => {
-                if (!currentJobs.includes(job['job_id']) && !pastJobs.includes(job['job_id'])) {
-                    let option = document.createElement('option');
-                    option.innerText = job['job_id'];
-                    jobIdInput.appendChild(option);
-                    if (label && option.innerText == label) option.setAttribute('selected', 'true');
-                    pastJobs.push(job['job_id']);
-                }
-            })
-        })
-        resolve(true);
-    }).then(() => {
-        return true;
+        // getPastJobs().then((res) => {
+        //     let currentJobs = [...jobIdInput.children].map(option => option.innerText);
+        //     let pastJobs = [];
+        //     res.forEach(job => {
+        //         if (!currentJobs.includes(job['job_id']) && !pastJobs.includes(job['job_id'])) {
+        //             let option = document.createElement('option');
+        //             option.innerText = job['job_id'];
+        //             jobIdInput.appendChild(option);
+        //             if (label && option.innerText == label) option.setAttribute('selected', 'true');
+        //             pastJobs.push(job['job_id']);
+        //         }
+        //     })
+        // })
+    }).then((options) => {
+        return options;
     })
 }
 
@@ -105,16 +105,18 @@ function createChart(selectedID, date) {
             datasets: [{
                 label: `Completed`,
                 data: completedDateRanges,
-                backgroundColor: 'rgba(0, 255, 127, 0.5)',
-                borderColor: 'rgba(0, 255, 127, 0.5)',
-                borderWidth: 1
+                backgroundColor: 'rgba(19, 194, 150)',
+                borderColor: 'rgba(255, 255, 255, 0.75)',
+                borderWidth: 1,
+                borderSkipped: false,
             },
             {
                 label: `In Progress`,
                 data: inProgressDateRanges,
-                backgroundColor: 'rgba(252, 202, 3, 0.5)',
-                borderColor: 'rgba(252, 202, 3)',
-                borderWidth: 1
+                backgroundColor: 'rgba(252, 202, 3)',
+                borderColor: 'rgba(255, 255, 255, 0.75)',
+                borderWidth: 1,
+                borderSkipped: false,
             }]
         }
 
@@ -199,9 +201,10 @@ function createChart(selectedID, date) {
                 back.removeEventListener('click', backToDateSelectInstance);
                 back.addEventListener('click', () => { backToChart(editWorkSessionHolder) });
                 if ([...editSessionJobId.children].length == 0) {
-                    appendAllJobs(editSessionJobId, label).then(() => {
-                        let selectedJob = [...editSessionJobId.children].filter(job => job.selected)[0];
-                        let otherJobs = [...editSessionJobId.children].filter(job => job != selectedJob);
+                    appendAllJobs(editSessionJobId, label).then((options) => {
+                        let selectedJob = options.filter(job => job.value == label)[0];
+                        selectedJob.setAttribute('selected', 'true');
+                        let otherJobs = options.filter(job => job.value != label);
                         otherJobs.forEach(job => job.removeAttribute('selected'));
                         let start_time = value['x'][0];
                         let end_time = value['x'][1];
@@ -221,8 +224,9 @@ function createChart(selectedID, date) {
                     });
                 }
                 else {
-                    let selectedJob = [...editSessionJobId.children].filter(job => job.selected)[0];
-                    let otherJobs = [...editSessionJobId.children].filter(job => job != selectedJob);
+                    let selectedJob = [...editSessionJobId.children].filter(job => job.value == label)[0];
+                    selectedJob.setAttribute('selected', 'true');
+                    let otherJobs = [...editSessionJobId.children].filter(job => job.value != label);
                     otherJobs.forEach(job => job.removeAttribute('selected'));
                     let start_time = value['x'][0];
                     let end_time = value['x'][1];
@@ -393,7 +397,7 @@ addSessionSubmit.addEventListener('click', () => {
     }
 
     // Add the session
-    if (!addWorkSession(selectedID, datePickerHidden.value, addSessionJobId.innerText, startTimeDB, endTimeDB)) {
+    if (!addWorkSession(selectedID, datePickerHidden.value, addSessionJobId.value, startTimeDB, endTimeDB)) {
         errorMessage.style.display = 'block';
         errorMessage.innerText = 'Error';
         setTimeout(() => {
@@ -406,7 +410,7 @@ addSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'flex';
     successSessionsEdit.style.display = 'none';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.innerText}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
+    successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
 })
 
 successAddAnotherSession.addEventListener('click', () => {
@@ -482,7 +486,7 @@ editSessionSubmit.addEventListener('click', () => {
     }
 
     // Edit the session
-    if (!editWorkSession(workSessionId, editSessionJobId.innerText, startTimeDB, endTimeDB)) {
+    if (!editWorkSession(workSessionId, editSessionJobId.value, startTimeDB, endTimeDB)) {
         errorMessage.style.display = 'block';
         errorMessage.innerText = 'Error';
         setTimeout(() => {
@@ -495,7 +499,7 @@ editSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'none';
     successSessionsEdit.style.display = 'flex';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${editSessionJobId.innerText}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
+    successMessage.innerHTML = `Session for Job <span id="success-subject">${editSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
 })
 
 successBackToSessionsEdit.addEventListener('click', () => {

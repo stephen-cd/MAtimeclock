@@ -4,7 +4,7 @@ let db = new sqlite3.Database('db.sqlite3');
 
 // Select employee records
 async function getEmployees() {
-    let statement = 'SELECT id, first_name, last_name, pin, manager FROM timeclock_employee WHERE pin != "" ORDER BY first_name';
+    let statement = 'SELECT pin, first_name, last_name, manager FROM timeclock_employee WHERE pin != "" ORDER BY first_name';
     return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
@@ -17,7 +17,7 @@ async function getEmployees() {
 
 // Select job records
 async function getJobs() {
-    let statement = 'SELECT id, job_id, status FROM timeclock_job ORDER BY job_id';
+    let statement = 'SELECT job_id, status FROM timeclock_job ORDER BY job_id';
     return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
@@ -28,19 +28,20 @@ async function getJobs() {
     })
 }
 
-// Select jobs from the past by selecting jobs that aren't in the jobs table
-async function getPastJobs() {
-    let statement = 'SELECT job_id FROM timeclock_job ORDER BY job_id';
-    let statement2 = `SELECT id, job_id FROM timeclock_hours WHERE job_id NOT IN (${statement}) ORDER BY job_id`;
-    return new Promise((resolve) => {
-        db.all(statement2, (err, rows) => { 
-            if (err) return console.log(err.message);
-            resolve(rows);
-        });
-    }).then((rows) => {
-        return rows
-    })
-}
+// Select jobs from the past by selecting jobs that aren't in the jobs table...keeping if needed in the future
+
+// async function getPastJobs() {
+//     let statement = 'SELECT job_id FROM timeclock_job ORDER BY job_id';
+//     let statement2 = `SELECT job_id FROM timeclock_hours WHERE job_id NOT IN (${statement}) ORDER BY job_id`;
+//     return new Promise((resolve) => {
+//         db.all(statement2, (err, rows) => { 
+//             if (err) return console.log(err.message);
+//             resolve(rows);
+//         });
+//     }).then((rows) => {
+//         return rows
+//     })
+// }
 
 // Add an employee record to the DB
 function addEmployee(firstName, lastName, pin, manager) {
@@ -50,15 +51,17 @@ function addEmployee(firstName, lastName, pin, manager) {
 }
 
 // Edit an employee name
-function editEmployeeName(id, firstName, lastName) {
-    let statement = `UPDATE timeclock_employee SET first_name="${firstName}", last_name="${lastName}" WHERE id="${id}"`;
+function editEmployeeName(pin, firstName, lastName) {
+    let statement = `UPDATE timeclock_employee SET first_name="${firstName}", last_name="${lastName}" WHERE pin="${pin}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
 
 // Edit an employee pin
-function editEmployeePin(id, pin) {
-    let statement = `UPDATE timeclock_employee SET pin="${pin}" WHERE id="${id}"`;
+function editEmployeePin(old_pin, new_pin) {
+    let statement = `UPDATE timeclock_employee SET pin="${new_pin}" WHERE pin="${old_pin}"`;
+    let statement2 = `UPDATE timeclock_hours SET pin="${new_pin}" WHERE pin="${old_pin}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
+    db.run(statement2, (err) => { if (err) return console.log(err.message); });
 }
 
 // Add a job
@@ -68,23 +71,25 @@ function addJob(job_id) {
 }
 
 // Edit a job ID
-function editJobId(id, old_job_id, new_job_id) {
-    let statement = `UPDATE timeclock_job SET job_id="${new_job_id}" WHERE id="${id}"`;
+function editJobId(old_job_id, new_job_id) {
+    let statement = `UPDATE timeclock_job SET job_id="${new_job_id}" WHERE job_id="${old_job_id}"`;
     let statement2 = `UPDATE timeclock_hours SET job_id="${new_job_id}" WHERE job_id="${old_job_id}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
     db.run(statement2, (err) => { if (err) return console.log(err.message); });
 }
 
 // Edit a job status
-function editJobStatus(id, status) {
-    let statement = `UPDATE timeclock_job SET status="${status}" WHERE id="${id}"`;
+function editJobStatus(job_id, status) {
+    let statement = `UPDATE timeclock_job SET status="${status}" WHERE job_id="${job_id}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
 
 // Remove a job
-function removeJob(id) {
-    let statement = `DELETE FROM timeclock_job WHERE id="${id}"`;
+function removeJob(job_id) {
+    let statement = `DELETE FROM timeclock_job WHERE job_id="${job_id}"`;
+    let statement2 = `DELETE FROM timeclock_hours WHERE job_id="${job_id}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
+    db.run(statement2, (err) => { if (err) return console.log(err.message); });
 }
 
 // For dev, insert dummy time records
@@ -192,4 +197,4 @@ async function checkForInProgressWorkSessions(jobId) {
 
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
-         getClockedInEmployees, getPastJobs, checkForInProgressWorkSessions }
+         getClockedInEmployees, checkForInProgressWorkSessions }
