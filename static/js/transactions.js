@@ -145,8 +145,7 @@ function clockIn(pin, jobId) {
     let date = `${currentDateTime.getFullYear()}-${month}-${day}`;
     let hours = (currentDateTime.getHours() < 10 ? '0' : '') + currentDateTime.getHours();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
-    let seconds = (currentDateTime.getSeconds() < 10 ? '0' : '') + currentDateTime.getSeconds();
-    let time = `${hours}:${minutes}:${seconds}`;
+    let time = `${hours}:${minutes}:00`;
     let statement = `INSERT INTO timeclock_hours (pin, job_id, date, start_time, end_time) VALUES ("${pin}", "${jobId}", "${date}", "${time}", '')`
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
@@ -168,8 +167,7 @@ async function checkIfClockedIn(pin) {
 function clockOut(id) {
     let currentDateTime = new Date();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
-    let seconds = (currentDateTime.getSeconds() < 10 ? '0' : '') + currentDateTime.getSeconds();
-    let time = `${currentDateTime.getHours()}:${minutes}:${seconds}`;
+    let time = `${currentDateTime.getHours()}:${minutes}:00`;
     let statement = `UPDATE timeclock_hours SET end_time="${time}" WHERE id=${id}`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }

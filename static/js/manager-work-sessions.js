@@ -45,6 +45,9 @@ let deleteSessionDate = document.getElementById('delete-session-date');
 let deleteSessionEmp = document.getElementById('delete-session-emp');
 let deleteSessionJobHours = document.getElementById('delete-session-job-hours');
 let deleteSessionSubmit = document.getElementById('delete-session-submit');
+let selectWorkSession = document.getElementById('select-work-session');
+let editWorkSessionBtn = document.getElementById('edit-work-session');
+let sessions;
 
 const picker = datepicker('#date-picker', {
     onSelect: (instance, date) => {
@@ -93,7 +96,7 @@ function createChart(selectedID, date) {
     // After picking the date, get the relevant employee work sessions based on selected employee and date
     // and build the chart with the data.
     getEmployeeWorkSessions(selectedID, date).then((res) => {
-        let sessions = res;
+        sessions = res;
         let dateRanges = [];
         let completedDateRanges = [];
         let inProgressDateRanges = [];
@@ -103,12 +106,24 @@ function createChart(selectedID, date) {
             sessionDict['x'] = [new Date(`${date}T${session['start_time']}`), new Date(`${date}T${session['end_time']}`)];
             sessionDict['y'] = `${session['job_id']}`;
             dateRanges.push(sessionDict);
+            let option = document.createElement('option');
+            option.setAttribute('value', session['id'])
+            if (session['end_time']) {
+                option.innerText = `Job ${session['job_id']}: ${session['start_time']} - ${session['end_time']}`;
+            }
+            else {
+                option.innerText = `Job ${session['job_id']}: ${session['start_time']} - Ongoing`;
+            }
+            selectWorkSession.appendChild(option);
         })
+        if ([...selectWorkSession.children].length == 0) {
+            selectWorkSession.style.display = 'none';
+            editWorkSessionBtn.style.display = 'none';
+        }
         completedDateRanges = dateRanges.filter(dict => !isNaN(dict['x'][1].valueOf()));
         inProgressDateRanges = dateRanges.filter(dict => isNaN(dict['x'][1].valueOf()));
         inProgressDateRanges.forEach(dict => dict['x'][1] = currentTime);
 
-        
         const data = {
             datasets: [{
                 label: `Completed`,
@@ -195,6 +210,10 @@ function createChart(selectedID, date) {
         };
 
         graph = new Chart(ctx, config);
+
+        sessions.forEach(session => {
+            let option = document.createElement('option');
+        })
 
         ctx.addEventListener('click', (e) => {
             let points = graph.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
@@ -308,7 +327,7 @@ let backToDateSelect = () => {
 let backToChart = (currentPage) => {
     ctx = document.getElementById('myChart');
     currentPage.style.display = '';
-    workSessionHolder.style.display = 'flex';
+    workSessionHolder.style.display = 'block';
     back.style.position = 'relative';
     back.style.zIndex = '1';
     ctx.style.marginTop = '0';
@@ -378,6 +397,63 @@ addWorkSessionBtn.addEventListener('click', () => {
     }
     workSessionHolder.style.display = 'none';
     addWorkSessionHolder.style.display = 'flex';
+})
+
+if (editWorkSessionBtn.style.display != 'none') {
+    editWorkSessionBtn.addEventListener('click', () => {
+        let selectedSession = [...selectWorkSession.children].filter(session => session.selected);
+        if (selectedSession.length == 0) return selectWorkSession.style.outline = '2px solid red';
+        selectedSession = sessions.filter(session => session['id'] == selectedSession[0].value)[0];
+        workSessionId = selectedSession['id']
+        workSessionHolder.style.display = 'none';
+        editWorkSessionHolder.style.display = 'flex';
+        if ([...editSessionJobId.children].length == 0) {
+            appendAllJobs(editSessionJobId, selectedSession['job_id']).then((options) => {
+                let selectedJob = options.filter(job => job.value == selectedSession['job_id'])[0];
+                selectedJob.setAttribute('selected', 'true');
+                let otherJobs = options.filter(job => job.value != selectedJob.value);
+                otherJobs.forEach(job => job.removeAttribute('selected'));
+                let start_time = new Date(`${datePickerHidden.value}T${selectedSession['start_time']}`);
+                let end_time = new Date(`${datePickerHidden.value}T${selectedSession['end_time']}`);
+                let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
+                let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
+                editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
+                if (selectedSession['end_time']) {
+                    let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
+                    let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
+                    editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                }
+                else {
+                    editSessionEnd.setAttribute('value', '');
+                }
+            });
+        }
+        else {
+            let selectedJob = [...editSessionJobId.children].filter(job => job.value == selectedSession['job_id'])[0];
+            selectedJob.setAttribute('selected', 'true');
+            let otherJobs = options.filter(job => job.value != selectedJob.value);
+            otherJobs.forEach(job => job.removeAttribute('selected'));
+            let start_time = selectedSession['start_time'];
+            let end_time = selectedSession['end_time'];
+            let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
+            let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
+            editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
+            if (selectedSession['end_time']) {
+                let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
+                let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
+                editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+            }
+            else {
+                editSessionEnd.setAttribute('value', '');
+            }
+        }
+        back.removeEventListener('click', backToDateSelectInstance);
+        back.addEventListener('click', () => { backToChart(editWorkSessionHolder) });
+    });
+}
+
+selectWorkSession.addEventListener('change', () => {
+    if (selectWorkSession.style.outline) selectWorkSession.style.outline = '';
 })
 
 addSessionStart.addEventListener('click', () => {
@@ -460,7 +536,7 @@ successBackToSessionsAdd.addEventListener('click', () => {
     back.removeEventListener('click', () => { backToChartInstance(currentPage) })
     back.addEventListener('click', backToDateSelectInstance);
     mainBody.style.display = '';
-    workSessionHolder.style.display = 'flex';
+    workSessionHolder.style.display = 'block';
     successBody.style.display = 'none';
     successSessionsAdd.style.display = 'none';
     successMessage.innerHTML = '';
@@ -514,6 +590,7 @@ editSessionSubmit.addEventListener('click', () => {
     }
 
     // Edit the session
+    console.log(workSessionId)
     if (!editWorkSession(workSessionId, editSessionJobId.value, startTimeDB, endTimeDB)) {
         errorMessage.style.display = 'block';
         errorMessage.innerText = 'Error';
@@ -541,7 +618,7 @@ successBackToSessionsEdit.addEventListener('click', () => {
     back.removeEventListener('click', () => { backToChartInstance(currentPage) })
     back.addEventListener('click', backToDateSelectInstance);
     mainBody.style.display = '';
-    workSessionHolder.style.display = 'flex';
+    workSessionHolder.style.display = 'block';
     successBody.style.display = 'none';
     successSessionsEdit.style.display = 'none';
     successMessage.innerHTML = '';

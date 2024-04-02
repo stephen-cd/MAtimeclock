@@ -29,7 +29,7 @@ a {
 
 #home, #back, #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next,
-#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit {
+#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session {
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
     border: unset;
@@ -37,7 +37,7 @@ a {
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job,
-#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit {
+#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
@@ -103,9 +103,14 @@ a {
     transform: translateY(-3px);
 }
 
-#next, #emp-select-next, #job-select-next, #add-work-session, #date-select-next {
+#next, #emp-select-next, #job-select-next, #date-select-next {
     width: 150px;
     height: 60px;
+    font-size: 30px;
+}
+
+#add-work-session, #edit-work-session {
+    height: 50px;
     font-size: 30px;
 }
 
@@ -286,7 +291,7 @@ button {
     padding-top: 10px;
 }
 
-#select-employee:focus-visible, #select-job:focus-visible {
+#select-employee:focus-visible, #select-job:focus-visible, #select-work-session:focus-visible {
     outline: none;
 }
 
@@ -344,13 +349,6 @@ label[for=select-employee] {
 
 #work-session-holder {
     position: relative;
-}
-
-#add-work-session {
-    position: absolute;
-    bottom: -120px;
-    left: 290px;
-    width: 200px;
 }
 
 #add-work-session-holder, #edit-work-session-holder {
@@ -429,4 +427,10 @@ label[for=select-employee] {
 #delete-work-session-holder {
     justify-content: center;
     align-items: center;
+}
+
+#select-work-session {
+    height: 125px;
+    width: 400px;
+    font-size: 20px;
 }
