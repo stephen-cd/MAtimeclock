@@ -56,8 +56,8 @@ let noSessionsActive = async () => {
 let removeJobSubmit = () => {
     removeJob(jobId);
     if ([...selectJob.children].length != 0) successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.`;
-    else successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.<br>No jobs remaining.`;
-    successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.`;
+    else successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.<br>No jobs remaining.`;
+    successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.`;
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
     backToJob.style.display = 'none';

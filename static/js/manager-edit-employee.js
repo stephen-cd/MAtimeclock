@@ -240,6 +240,7 @@ removeEmp.addEventListener('click', async () => {
 })
 
 removeEmpSubmit.addEventListener('click', async () => {
+    removeEmployee(employeePin);
     successMessage.innerHTML = `Employee <span id='success-subject'>${firstName} ${lastName}</span> removed successfully.`;
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';

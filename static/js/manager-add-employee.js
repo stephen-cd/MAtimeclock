@@ -18,6 +18,7 @@ let mainBody = document.getElementById('main-body');
 let backspace = document.getElementById('backspace');
 window.sessionStorage['backToMO'] = true;
 let pins;
+let managerCheckbox = document.getElementById('manager-checkbox');
 
 getEmployees().then((res) => {
     pins = res.map(employee => employee['pin']);
@@ -48,6 +49,12 @@ firstName.addEventListener('input', () => {
 
 lastName.addEventListener('input', () => {
     if (lastName.style.outline) lastName.style.outline = '';
+})
+
+managerCheckbox.addEventListener('change', () => {
+    if (managerCheckbox.checked) {
+        manager = true;
+    }
 })
 
 next.addEventListener('click', () => {
