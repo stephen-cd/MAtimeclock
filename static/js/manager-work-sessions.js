@@ -50,6 +50,7 @@ let editWorkSessionBtn = document.getElementById('edit-work-session');
 let sessions;
 
 const picker = datepicker('#date-picker', {
+    maxDate: new Date(),
     onSelect: (instance, date) => {
         if (datePicker.style.outline) datePicker.style.outline = '';
         if (date) {
