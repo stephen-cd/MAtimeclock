@@ -10,8 +10,6 @@ async function getEmployees() {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
     })
 }
 
@@ -23,8 +21,6 @@ async function getJobs() {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
     })
 }
 
@@ -60,6 +56,14 @@ function editEmployeeName(pin, firstName, lastName) {
 function editEmployeePin(old_pin, new_pin) {
     let statement = `UPDATE timeclock_employee SET pin="${new_pin}" WHERE pin="${old_pin}"`;
     let statement2 = `UPDATE timeclock_hours SET pin="${new_pin}" WHERE pin="${old_pin}"`;
+    db.run(statement, (err) => { if (err) return console.log(err.message); });
+    db.run(statement2, (err) => { if (err) return console.log(err.message); });
+}
+
+// Remove an employee
+function removeEmployee(pin) {
+    let statement = `DELETE FROM timeclock_employee WHERE pin="${pin}"`;
+    let statement2 = `DELETE FROM timeclock_hours WHERE pin="${pin}"`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
     db.run(statement2, (err) => { if (err) return console.log(err.message); });
 }
@@ -114,8 +118,6 @@ async function getEmployeeWorkSessions(pin, date) {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
     })
 }
 
@@ -145,7 +147,7 @@ function clockIn(pin, jobId) {
     let date = `${currentDateTime.getFullYear()}-${month}-${day}`;
     let hours = (currentDateTime.getHours() < 10 ? '0' : '') + currentDateTime.getHours();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
-    let time = `${hours}:${minutes}:00`;
+    let time = `${hours}:${minutes}`;
     let statement = `INSERT INTO timeclock_hours (pin, job_id, date, start_time, end_time) VALUES ("${pin}", "${jobId}", "${date}", "${time}", '')`
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
@@ -158,8 +160,6 @@ async function checkIfClockedIn(pin) {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
     })
 }
 
@@ -167,7 +167,7 @@ async function checkIfClockedIn(pin) {
 function clockOut(id) {
     let currentDateTime = new Date();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
-    let time = `${currentDateTime.getHours()}:${minutes}:00`;
+    let time = `${currentDateTime.getHours()}:${minutes}`;
     let statement = `UPDATE timeclock_hours SET end_time="${time}" WHERE id=${id}`;
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
@@ -180,8 +180,6 @@ async function getClockedInEmployees() {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
     })
 }
 
@@ -193,11 +191,29 @@ async function checkForInProgressWorkSessions(jobId) {
             if (err) return console.log(err.message);
             resolve(rows);
         });
-    }).then((rows) => {
-        return rows;
+    })
+}
+
+async function getEmployeeWorkSessionCount(pin) {
+    let statement = `SELECT COUNT(*) FROM timeclock_hours WHERE pin="${pin}"`;
+    return new Promise((resolve) => {
+        db.get(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    })
+}
+
+async function getJobWorkSessionCount(job_id) {
+    let statement = `SELECT COUNT(*) FROM timeclock_hours WHERE job_id="${job_id}"`;
+    return new Promise((resolve) => {
+        db.get(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
     })
 }
 
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
-         getClockedInEmployees, checkForInProgressWorkSessions, deleteWorkSession }
+         getClockedInEmployees, checkForInProgressWorkSessions, deleteWorkSession, getEmployeeWorkSessionCount, removeEmployee, getJobWorkSessionCount }

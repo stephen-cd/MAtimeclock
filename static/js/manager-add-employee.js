@@ -10,7 +10,6 @@ let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let pin = document.getElementById('pin');
 let empPin;
 let pinEnter = document.getElementById('pin-enter');
-let pinsDoNotMatch = document.getElementById('pins-do-not-match');
 let back = document.getElementById('back');
 let manager = false;
 let successBody = document.getElementById('success-body');
@@ -76,25 +75,34 @@ backspace.addEventListener('click', () => {
 })
 
 enter.addEventListener('click', () => {
-    if (!pin.value) {
-        pin.style.outline = '2px solid red';
-        return;
+    if (!empPin) {
+        if (!pin.value) {
+            pin.style.outline = '2px solid red';
+            return;
+        }
+        if (pins.includes(pin.value)) {
+            pin.value = '';
+            pin.placeholder = 'Please use another PIN';
+            pin.style.outline = '2px solid red';
+            setTimeout(() => {
+                pin.placeholder = 'Enter PIN for new emp.';
+                pin.style.outline = '';
+            }, 2000);
+            return;
+        }
     }
-    if (pins.includes(pin.value)) {
-        pin.style.outline = '2px solid red';
-        return;
-    }
+    
     if (empPin) {
         if (empPin != pin.value) {
-            pinEnter.style.display = 'none';
-            pinsDoNotMatch.style.display = 'block';
+            pin.value = '';
+            pin.placeholder = 'PINs do not match';
+            pin.style.outline = '2px solid red';
             setTimeout(() => {
                 pinEnter.style.display = 'flex';
-                pinsDoNotMatch.style.display = 'none';
                 pin.placeholder = 'Enter PIN for new emp.';
                 pin.value = '';
                 empPin = '';
-                back.parentElement.href = 'manager.html';
+                pin.style.outline = '';
             }, 2000);
             return;
         }

@@ -13,7 +13,6 @@ let employeeList;
 // Retrieve the employees
 await getEmployees().then((res) => {
     employeeList = res;
-    console.log(res)
 });
 let admins = employeeList.filter(employee => employee['manager']);
 let employees = employeeList.filter(employee => !employee['manager']);

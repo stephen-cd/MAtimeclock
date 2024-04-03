@@ -32,11 +32,17 @@ enter.addEventListener('click', () => {
         return;
     }
     if (jobs.includes(job.value)) {
+        job.value = '';
+        job.placeholder = 'Job ID is currently in use';
         job.style.outline = '2px solid red';
+        setTimeout(() => {
+            job.placeholder = 'ID for new job';
+            job.style.outline = '';
+        }, 2000);
         return;
     }
     addJob(job.value);
-    successMessage.innerHTML = `Job <span id='success-subject'>${job.value}</span> added successfully.`;
+    successMessage.innerHTML = `<span id='success-subject'>Job ${job.value}</span> added successfully.`;
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
 })

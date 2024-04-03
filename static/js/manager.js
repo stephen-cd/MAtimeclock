@@ -16,6 +16,11 @@ if (sessionStorage.getItem('backToMO') == 'true') {
     managerOptions2.style.display = 'flex';
     back.hidden = false;
 }
+else {
+    managerOptions1.style.display = 'flex';
+    managerOptions2.style.display = 'none';
+    back.hidden = true;
+}
 
 getJobs().then((res) => {
     jobs = res.map(job => job['job_id']);

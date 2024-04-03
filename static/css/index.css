@@ -135,3 +135,7 @@ button {
     border-radius: 10px;
     scale: 0.925;
 }
+
+#back {
+    text-align: left;
+}

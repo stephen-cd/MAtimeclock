@@ -29,7 +29,8 @@ a {
 
 #home, #back, #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #change-job-id, #complete-or-reopen-job, #remove-job, #job-select-next,
-#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session {
+#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session,
+#remove-emp, #remove-emp-submit {
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
     border: unset;
@@ -37,7 +38,8 @@ a {
 
 #time-clock, #go-to-MO2, #manager-add-employee, #manager-edit-employee, #manager-add-job, #manager-edit-job, #next, #emp-select-next, #edit-name, #edit-pin, .edit-submit, .edit-enter,
 #success-change-pin, #edit-other-emps, #return-to-menu, #success-change-name, #add-other-emps, #add-other-jobs, #job-select-next, #change-job-id, #complete-or-reopen-job, #remove-job,
-#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session {
+#date-select-next, #add-work-session, #success-add-another-session, #success-back-to-sessions-add, #success-change-employee, #success-return-to-menu, #success-back-to-sessions-edit, #edit-work-session,
+#remove-emp, #remove-emp-submit {
     background-color: #13c296;
     color: white;
     text-shadow: 0 0.050em 0.050em rgba(0,0,0,0.5);
@@ -63,7 +65,7 @@ a {
     left: 0;
 }
 
-#time-clock, #go-to-MO2, #edit-name, #edit-pin {
+#time-clock, #go-to-MO2, #edit-name, #edit-pin, #remove-emp {
     width: 550px;
     height: 100px;
     font-size: 50px;
@@ -228,12 +230,6 @@ form {
     flex-direction: column;
 }
 
-#pins-do-not-match {
-    color: red;
-    text-align: center;
-    font-size: 30px;
-}
-
 #keypad-holder, #pins-do-not-match {
     display: none;
 }
@@ -354,9 +350,8 @@ label[for=select-employee] {
 #add-work-session-holder, #edit-work-session-holder {
     justify-content: flex-start;
     align-items: center;
-    margin: 0 70px;
+    margin: 90px 70px 0 70px;
     gap: 20px;
-    transform: translateY(-50px);
 }
 
 #error-message {
@@ -433,4 +428,30 @@ label[for=select-employee] {
     height: 125px;
     width: 400px;
     font-size: 20px;
+}
+
+#remove-emp-holder {
+    display: none;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+}
+
+#remove-emp-name, #remove-emp-details, #remove-message, #remove-job-details {
+    margin: 0;
+    text-align: center;
+}
+
+#remove-job-holder {
+    gap: 50px;
+}
+
+#back {
+    text-align: left;
+}
+
+#manager-options-1, #manager-options-2 {
+    display: none;
 }

@@ -22,6 +22,7 @@
             <h1 id="editing-employee"></h1>
             <button id="edit-name" type="button">Edit Name</button>
             <button id="edit-pin" type="button">Change PIN</button>
+            <button id="remove-emp" style="background-color: red;" type="button">Remove</button>
         </div>
         <div id="edit-employee-name-inputs">
             <div>
@@ -38,13 +39,17 @@
             <div id="pin-enter">
                 <input id="pin" type="password" placeholder="Enter new PIN for emp.">
             </div>
-            <h3 id="pins-do-not-match">Pins do not match, please enter again.</h3>
             <div id="keypad">
                 <div class="keypad-row"><div class="keypad-button">1</div><div class="keypad-button">2</div><div class="keypad-button">3</div></div>
                 <div class="keypad-row"><div class="keypad-button">4</div><div class="keypad-button">5</div><div class="keypad-button">6</div></div>
                 <div class="keypad-row"><div class="keypad-button">7</div><div class="keypad-button">8</div><div class="keypad-button">9</div></div>
                 <div class="keypad-row"><div id="backspace" class="keypad-button">&#x2190;</div><div class="keypad-button">0</div><a class="keypad-button-enter-emp"><button id="enter">Enter</button></a></div>
             </div>
+        </div>
+        <div id="remove-emp-holder">
+            <h1 id="remove-emp-name"></h1>
+            <h1 id="remove-emp-details"></h1>
+            <button id="remove-emp-submit" class="button-md" style="background-color: red;" type="button">Remove</button>
         </div>
     </div>
     <div id="success-body">
