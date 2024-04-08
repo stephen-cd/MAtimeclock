@@ -21,7 +21,8 @@ let addSessionStart = document.getElementById('add-session-start');
 let addSessionEnd = document.getElementById('add-session-end');
 let addSessionSubmit = document.getElementById('add-session-submit');
 let addSessionJobId = document.getElementById('add-session-job-id');
-let errorMessage = document.getElementById('error-message');
+let errorAdd = document.querySelector('[error-add]');
+let errorEdit = document.querySelector('[error-edit]');
 let successBody = document.getElementById('success-body');
 let successMessage = document.getElementById('success-message');
 let mainBody = document.getElementById('main-body');
@@ -48,6 +49,10 @@ let deleteSessionSubmit = document.getElementById('delete-session-submit');
 let selectWorkSession = document.getElementById('select-work-session');
 let editWorkSessionBtn = document.getElementById('edit-work-session');
 let sessions;
+let originalSessionStart;
+let originalSessionEnd;
+let originalJob;
+let sessionRanges;
 
 const picker = datepicker('#date-picker', {
     maxDate: new Date(),
@@ -98,6 +103,7 @@ function createChart(selectedID, date) {
     // and build the chart with the data.
     getEmployeeWorkSessions(selectedID, date).then((res) => {
         sessions = res;
+        sessionRanges = sessions.map(session => [session['start_time'], session['end_time']]);
         let dateRanges = [];
         let completedDateRanges = [];
         let inProgressDateRanges = [];
@@ -121,7 +127,7 @@ function createChart(selectedID, date) {
                 option.innerText = `Job ${session['job_id']}: ${startTime} - ${endTime}`;
             }
             else {
-                option.innerText = `Job ${session['job_id']}: ${session['start_time']} - Ongoing`;
+                option.innerText = `Job ${session['job_id']}: ${startTime} - Ongoing`;
             }
             selectWorkSession.appendChild(option);
         })
@@ -235,43 +241,51 @@ function createChart(selectedID, date) {
                 if ([...editSessionJobId.children].length == 0) {
                     appendAllJobs(editSessionJobId, label).then((options) => {
                         let selectedJob = options.filter(job => job.value == label)[0];
-                        selectedJob.setAttribute('selected', 'true');
+                        selectedJob.selected = 'true';
                         let otherJobs = options.filter(job => job.value != label);
                         otherJobs.forEach(job => job.removeAttribute('selected'));
+                        originalJob = label;
                         let start_time = value['x'][0];
                         let end_time = value['x'][1];
                         let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
                         let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
+                        originalSessionStart = `${start_hour}:${start_min}`;
                         workSessionId = sessions.filter(dict => dict['start_time'] == `${start_hour}:${start_min}`)[0]['id'];
                         editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
                         if (slabel == 'Completed') {
                             let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
                             let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
-                            editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                            editSessionEnd.value = `${end_hour}:${end_min}`;
+                            originalSessionEnd = `${end_hour}:${end_min}`;
                         }
                         else {
-                            editSessionEnd.setAttribute('value', '');
+                            editSessionEnd.value = '';
+                            originalSessionEnd = 'Ongoing';
                         }
                     });
                 }
                 else {
                     let selectedJob = [...editSessionJobId.children].filter(job => job.value == label)[0];
-                    selectedJob.setAttribute('selected', 'true');
+                    selectedJob.selected = 'true';
                     let otherJobs = [...editSessionJobId.children].filter(job => job.value != label);
                     otherJobs.forEach(job => job.removeAttribute('selected'));
+                    originalJob = label;
                     let start_time = value['x'][0];
                     let end_time = value['x'][1];
                     let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
                     let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
+                    originalSessionStart = `${start_hour}:${start_min}`;
                     workSessionId = sessions.filter(dict => dict['start_time'] == `${start_hour}:${start_min}`)[0]['id'];
                     editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
                     if (slabel == 'Completed') {
                         let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
                         let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
-                        editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                        editSessionEnd.value = `${end_hour}:${end_min}`;
+                        originalSessionEnd = `${end_hour}:${end_min}`;
                     }
                     else {
-                        editSessionEnd.setAttribute('value', '');
+                        editSessionEnd.value = '';
+                        originalSessionEnd = 'Ongoing';
                     }
                 }
                 workSessionHolder.style.display = 'none';
@@ -421,41 +435,49 @@ editWorkSessionBtn.addEventListener('click', () => {
     if ([...editSessionJobId.children].length == 0) {
         appendAllJobs(editSessionJobId, selectedSession['job_id']).then((options) => {
             let selectedJob = options.filter(job => job.value == selectedSession['job_id'])[0];
-            selectedJob.setAttribute('selected', 'true');
+            selectedJob.selected = 'true';
             let otherJobs = options.filter(job => job.value != selectedJob.value);
             otherJobs.forEach(job => job.removeAttribute('selected'));
+            originalJob = selectedJob.innerText;
             let start_time = new Date(`${datePickerHidden.value}T${selectedSession['start_time']}`);
             let end_time = new Date(`${datePickerHidden.value}T${selectedSession['end_time']}`);
             let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
             let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
             editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
+            originalSessionStart = `${start_hour}:${start_min}`;
             if (selectedSession['end_time']) {
                 let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
                 let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
-                editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+                editSessionEnd.value = `${end_hour}:${end_min}`;
+                originalSessionEnd = `${end_hour}:${end_min}`;
             }
             else {
-                editSessionEnd.setAttribute('value', '');
+                editSessionEnd.value = '';
+                originalSessionEnd = 'Ongoing';
             }
         });
     }
     else {
         let selectedJob = [...editSessionJobId.children].filter(job => job.value == selectedSession['job_id'])[0];
-        selectedJob.setAttribute('selected', 'true');
+        selectedJob.selected = 'true';
         let otherJobs = [...editSessionJobId.children].filter(job => job.value != selectedJob.value);
         otherJobs.forEach(job => job.removeAttribute('selected'));
+        originalJob = selectedJob.innerText;
         let start_time = new Date(`${datePickerHidden.value}T${selectedSession['start_time']}`);
         let end_time = new Date(`${datePickerHidden.value}T${selectedSession['end_time']}`);
         let start_hour = (start_time.getHours() < 10 ? '0' : '') + start_time.getHours();
         let start_min = (start_time.getMinutes() < 10 ? '0' : '') + start_time.getMinutes();
+        originalSessionStart = `${start_hour}:${start_min}`;
         editSessionStart.setAttribute('value', `${start_hour}:${start_min}`);
         if (selectedSession['end_time']) {
             let end_hour = (end_time.getHours() < 10 ? '0' : '') + end_time.getHours();
             let end_min = (end_time.getMinutes() < 10 ? '0' : '') + end_time.getMinutes();
-            editSessionEnd.setAttribute('value', `${end_hour}:${end_min}`);
+            editSessionEnd.value = `${end_hour}:${end_min}`;
+            originalSessionEnd = `${end_hour}:${end_min}`;
         }
         else {
-            editSessionEnd.setAttribute('value', '');
+            editSessionEnd.value = '';
+            originalSessionEnd = 'Ongoing';
         }
     }
     back.removeEventListener('click', backToDateSelectInstance);
@@ -500,42 +522,61 @@ addSessionSubmit.addEventListener('click', () => {
     let startTimeDB = addSessionStart.value;
     let endTimeDB = addSessionEnd.value;
     let startTime = new Date(`${datePickerHidden.value}T${startTimeDB}`);
-    let endTime = new Date(`${datePickerHidden.value}T${endTimeDB}`);
-    if (startTime >= new Date()) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Start time has not yet occurred';
+    let endTime = endTimeDB != '' ? new Date(`${datePickerHidden.value}T${endTimeDB}`) : '';
+    let currentTime = new Date();
+    if (startTime >= currentTime) {
+        errorAdd.style.display = 'block';
+        errorAdd.innerText = 'Start time has not occurred yet';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorAdd.style.display = '';
+            errorAdd.innerText = '';
         }, 2000);
         return;
     }
-    if (endTime >= new Date()) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'End time has not yet occurred';
+    if (endTime && endTime >= currentTime) {
+        errorAdd.style.display = 'block';
+        errorAdd.innerText = 'End time has not occurred yet';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorAdd.style.display = '';
+            errorAdd.innerText = '';
         }, 2000);
         return
     }
-    if (startTime >= endTime) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Invalid time range';
+    if (endTime && startTime >= endTime) {
+        errorAdd.style.display = 'block';
+        errorAdd.innerText = 'Invalid time range';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorAdd.style.display = '';
+            errorAdd.innerText = '';
+        }, 2000);
+        return
+    }
+    if (sessionRanges.some(sessionRange => {
+        let sessionRangeStart = new Date(`${datePickerHidden.value}T${sessionRange[0]}`);
+        let sessionRangeEnd = new Date(`${datePickerHidden.value}T${sessionRange[1]}`)
+        if (!endTime) {
+            if (sessionRangeStart < currentTime && sessionRangeEnd > startTime) return true;
+        }
+        else {
+            if (sessionRangeStart < endTime && sessionRangeEnd > startTime) return true;
+        }}) 
+    ) {
+        errorAdd.style.display = 'block';
+        errorAdd.innerText = 'Session overlaps with existing session(s)';
+        setTimeout(() => {
+            errorAdd.style.display = '';
+            errorAdd.innerText = '';
         }, 2000);
         return
     }
 
     // Add the session
     if (!addWorkSession(selectedID, datePickerHidden.value, addSessionJobId.value, startTimeDB, endTimeDB)) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Error';
+        errorAdd.style.display = 'block';
+        errorAdd.innerText = 'Error';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorAdd.style.display = '';
+            errorAdd.innerText = '';
         }, 2000);
     }
     mainBody.style.display = 'none';
@@ -543,7 +584,7 @@ addSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'flex';
     successSessionsEdit.style.display = 'none';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${addSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
+    successMessage.innerHTML = `Session for <span id="success-subject">Job ${addSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
 })
 
 successAddAnotherSession.addEventListener('click', () => {
@@ -569,7 +610,7 @@ successBackToSessionsAdd.addEventListener('click', () => {
     successBody.style.display = 'none';
     successSessionsAdd.style.display = 'none';
     successMessage.innerHTML = '';
-    ctx.setAttribute('style', 'display: block; box-sizing: border-box; height: 262px; width: 786px; margin-top: 0;');
+    ctx.setAttribute('style', 'display: block; box-sizing: border-box; height: 262px; width: 786px; margin-top: 50px;');
 })
 
 editSessionStart.addEventListener('click', () => {
@@ -605,41 +646,60 @@ editSessionSubmit.addEventListener('click', () => {
     let endTimeDB = editSessionEnd.value;
     let startTime = new Date(`${datePickerHidden.value}T${startTimeDB}`);
     let endTime = new Date(`${datePickerHidden.value}T${endTimeDB}`);
-    if (startTime >= new Date()) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Start time has not yet occurred';
+    let currentTime = new Date();
+    if (startTime >= currentTime) {
+        errorEdit.style.display = 'block';
+        errorEdit.innerText = 'Start time has not occurred yet';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorEdit.style.display = '';
+            errorEdit.innerText = '';
         }, 2000);
         return
     }
-    if (endTime >= new Date()) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'End time has not yet occurred';
+    if (endTime >= currentTime) {
+        errorEdit.style.display = 'block';
+        errorEdit.innerText = 'End time has not occurred yet';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorEdit.style.display = '';
+            errorEdit.innerText = '';
         }, 2000);
         return
     }
     if (startTime >= endTime) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Invalid time range';
+        errorEdit.style.display = 'block';
+        errorEdit.innerText = 'Invalid time range';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorEdit.style.display = '';
+            errorEdit.innerText = '';
+        }, 2000);
+        return
+    }
+    if (sessionRanges.some(sessionRange => {
+        let sessionRangeStart = new Date(`${datePickerHidden.value}T${sessionRange[0]}`);
+        let sessionRangeEnd = new Date(`${datePickerHidden.value}T${sessionRange[1]}`)
+        if (!endTime) {
+            if (sessionRangeStart < currentTime && sessionRangeEnd > startTime) return true;
+        }
+        else {
+            if (sessionRangeStart < endTime && sessionRangeEnd > startTime) return true;
+        }}) 
+    ) {
+        errorEdit.style.display = 'block';
+        errorEdit.innerText = 'Session overlaps with existing session(s)';
+        setTimeout(() => {
+            errorEdit.style.display = '';
+            errorEdit.innerText = '';
         }, 2000);
         return
     }
 
     // Edit the session
     if (!editWorkSession(workSessionId, editSessionJobId.value, startTimeDB, endTimeDB)) {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Error';
+        errorEdit.style.display = 'block';
+        errorEdit.innerText = 'Error';
         setTimeout(() => {
-            errorMessage.style.display = '';
-            errorMessage.innerText = '';
+            errorEdit.style.display = '';
+            errorEdit.innerText = '';
         }, 2000);
     }
     mainBody.style.display = 'none';
@@ -647,7 +707,7 @@ editSessionSubmit.addEventListener('click', () => {
     successBody.style.display = 'flex';
     successSessionsAdd.style.display = 'none';
     successSessionsEdit.style.display = 'flex';
-    successMessage.innerHTML = `Session for Job <span id="success-subject">${editSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
+    successMessage.innerHTML = `Session for <span id="success-subject">Job ${editSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
 })
 
 successBackToSessionsEdit.addEventListener('click', () => {
@@ -675,18 +735,17 @@ deleteSessionBtn.addEventListener('click', () => {
     deleteWorkSessionHolder.style.display = 'flex';
     deleteSessionDate.innerText = `${titleDate[1]}/${titleDate[2]}/${titleDate[0]}`;
     deleteSessionEmp.innerText = `${firstName} ${lastName}`;
-    let selectedJob = [...editSessionJobId.children].filter(job => job.selected)[0].innerText;
-    let startTime = new Date(`${datePickerHidden.value}T${editSessionStart.value}`);
+    let startTime = new Date(`${datePickerHidden.value}T${originalSessionStart}`);
     startTime = startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     let endTime;
     if (editSessionEnd.value) {
-        endTime = new Date(`${datePickerHidden.value}T${editSessionEnd.value}`);
+        endTime = new Date(`${datePickerHidden.value}T${originalSessionEnd}`);
         endTime = endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     }
     else {
         endTime = 'Ongoing';
     }
-    deleteSessionJobHours.innerText = `Job ${selectedJob}: ${startTime} - ${endTime}`;
+    deleteSessionJobHours.innerText = `Job ${originalJob}: ${startTime} - ${endTime}`;
     back.removeEventListener('click', backToChartFromEditSession);
     back.addEventListener('click', backToEditSessionInstance);
 })

@@ -32,6 +32,8 @@ function currentMsToTime(ms) {
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
+    console.log(hours, minutes, seconds, totalSeconds)
+
     return [hours, minutes, seconds, totalSeconds];
 }
 
@@ -71,7 +73,9 @@ await getClockedInEmployees().then((res) => {
         let date = employee['date'];
         let startTimeDate = new Date(`${date}T${startTime}`);
         let currentTime = new Date()
+        console.log(currentTime - startTimeDate)
         let elapsedTime = new Date(currentTime - startTimeDate).getTime();
+        console.log(elapsedTime)
         elapsedTime = currentMsToTime(elapsedTime);
         hours.innerText = elapsedTime[0];
         minutes.innerText = elapsedTime[1];

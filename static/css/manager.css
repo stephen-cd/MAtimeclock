@@ -354,10 +354,12 @@ label[for=select-employee] {
     gap: 20px;
 }
 
-#error-message {
+[error-add], [error-edit] {
     color: red;
     position: absolute;
-    top: 47px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 #success-sessions-add, #success-sessions-edit {
@@ -454,4 +456,17 @@ label[for=select-employee] {
 
 #manager-options-1, #manager-options-2 {
     display: none;
+}
+
+#checkbox-holder {
+    width: 715px;
+    text-align: left;
+    display: flex;
+    gap: 37.5px;
+}
+
+#manager-checkbox {
+    width: 35px;
+    height: 35px;
+    transform: translateY(4.5px);
 }

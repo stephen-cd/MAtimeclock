@@ -147,7 +147,8 @@ function clockIn(pin, jobId) {
     let date = `${currentDateTime.getFullYear()}-${month}-${day}`;
     let hours = (currentDateTime.getHours() < 10 ? '0' : '') + currentDateTime.getHours();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
-    let time = `${hours}:${minutes}`;
+    let seconds = (currentDateTime.getSeconds() < 10 ? '0' : '') + currentDateTime.getSeconds();
+    let time = `${hours}:${minutes}:${seconds}`;
     let statement = `INSERT INTO timeclock_hours (pin, job_id, date, start_time, end_time) VALUES ("${pin}", "${jobId}", "${date}", "${time}", '')`
     db.run(statement, (err) => { if (err) return console.log(err.message); });
 }
@@ -168,8 +169,20 @@ function clockOut(id) {
     let currentDateTime = new Date();
     let minutes = (currentDateTime.getMinutes() < 10 ? '0' : '') + currentDateTime.getMinutes();
     let time = `${currentDateTime.getHours()}:${minutes}`;
-    let statement = `UPDATE timeclock_hours SET end_time="${time}" WHERE id=${id}`;
-    db.run(statement, (err) => { if (err) return console.log(err.message); });
+    let statement = `SELECT start_time FROM timeclock_hours WHERE id="${id}"`;
+    let start_time;
+    new Promise((resolve) => {
+        db.get(statement, (err, start_time) => { 
+            if (err) return console.log(err.message);
+            resolve(start_time);
+        });
+    }).then((res) => {
+        start_time = res['start_time']
+        if (start_time.length == 8) start_time = start_time.substring(0, start_time.length - 3);
+        console.log(start_time)
+        statement = `UPDATE timeclock_hours SET start_time="${start_time}", end_time="${time}" WHERE id="${id}"`;
+        db.run(statement, (err) => { if (err) return console.log(err.message); });
+    })
 }
 
 // Get clocked in employees
@@ -206,6 +219,16 @@ async function getEmployeeWorkSessionCount(pin) {
 
 async function getJobWorkSessionCount(job_id) {
     let statement = `SELECT COUNT(*) FROM timeclock_hours WHERE job_id="${job_id}"`;
+    return new Promise((resolve) => {
+        db.get(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    })
+}
+
+function getStartTime(id) {
+    let statement = `SELECT COUNT(*) FROM timeclock_hours WHERE pin="${pin}"`;
     return new Promise((resolve) => {
         db.get(statement, (err, rows) => { 
             if (err) return console.log(err.message);

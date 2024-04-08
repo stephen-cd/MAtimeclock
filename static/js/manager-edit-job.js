@@ -74,7 +74,11 @@ let noSessionsActiveInstance = noSessionsActive;
 let removeJobSubmitInstance = removeJobSubmit;
 
 async function appendJobs() {
+    if (selectJob.hasChildNodes()) [...selectJob.children].forEach(job => job.remove());
     await getJobs().then((res) => {
+        res = res.sort((a, b) => {
+            return a['job_id'] - b['job_id'] || a['job_id'].length - b['job_id'].length;
+        })
         numberOfJobs = res.length;
         numberOfJobs > 1 ? selectJob.setAttribute('size', numberOfJobs) : selectJob.setAttribute('size', 2);
         jobIds = res.map(job => job['job_id']);
