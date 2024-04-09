@@ -413,6 +413,10 @@ addWorkSessionBtn.addEventListener('click', () => {
     if ([...addSessionJobId.children].length == 0) {
         appendAllJobs(addSessionJobId);
     }
+    else {
+        let selectedJob = [...addSessionJobId.children].filter(session => session.selected)[0];
+        selectedJob.selected = false;
+    }
     workSessionHolder.style.display = 'none';
     addWorkSessionHolder.style.display = 'flex';
     addSessionStart.value = '08:00';
@@ -647,6 +651,8 @@ editSessionSubmit.addEventListener('click', () => {
     let startTime = new Date(`${datePickerHidden.value}T${startTimeDB}`);
     let endTime = new Date(`${datePickerHidden.value}T${endTimeDB}`);
     let currentTime = new Date();
+    let sessionRangesExceptCurrent = sessionRanges.filter(session => session[0] != startTimeDB && session[1] != endTimeDB)
+    console.log(sessionRangesExceptCurrent)
     if (startTime >= currentTime) {
         errorEdit.style.display = 'block';
         errorEdit.innerText = 'Start time has not occurred yet';
@@ -674,7 +680,7 @@ editSessionSubmit.addEventListener('click', () => {
         }, 2000);
         return
     }
-    if (sessionRanges.some(sessionRange => {
+    if (sessionRangesExceptCurrent.some(sessionRange => {
         let sessionRangeStart = new Date(`${datePickerHidden.value}T${sessionRange[0]}`);
         let sessionRangeEnd = new Date(`${datePickerHidden.value}T${sessionRange[1]}`)
         if (!endTime) {
