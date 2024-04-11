@@ -1,10 +1,34 @@
-import { getEmployees, getClockedInEmployees } from "./transactions.js";
+import { getEmployees, getClockedInEmployees, prepareDataForUpdate } from "./transactions.js";
 
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
 
 // let statement = 'INSERT INTO timeclock_employee (pin, first_name, last_name, manager) VALUES ("1111", "Dan", "Newman", "1")'
 // db.run(statement)
+
+let csrf_token;
+fetch('http://127.0.0.1:8000/update-db/', {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+}).then((response) => {
+    response.text().then((response) => {
+            csrf_token = response
+            document.cookie = csrf_token
+            console.log(csrf_token)
+            let data = prepareDataForUpdate();
+            fetch('http://127.0.0.1:8000/update-db/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: data
+        })
+    })
+})
 
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');

@@ -237,6 +237,40 @@ function getStartTime(id) {
     })
 }
 
+function prepareDataForUpdate() {
+    let employees;
+    let jobs;
+    let hours;
+    let statement = 'SELECT * FROM timeclock_employee';
+    new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    }).then((res) => {
+        employees = res;
+    })
+    statement = 'SELECT * FROM timeclock_job';
+    new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    }).then((res) => {
+        jobs = res;
+    })
+    statement = 'SELECT * FROM timeclock_hours';
+    new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) return console.log(err.message);
+            resolve(rows);
+        });
+    }).then((res) => {
+        hours = res;
+    })
+    return [employees, jobs, hours];
+}
+
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          insertTimeRecords, getEmployeeWorkSessions, addWorkSession, editWorkSession, deleteRecords, clockIn, clockOut, checkIfClockedIn, 
-         getClockedInEmployees, checkForInProgressWorkSessions, deleteWorkSession, getEmployeeWorkSessionCount, removeEmployee, getJobWorkSessionCount }
+         getClockedInEmployees, checkForInProgressWorkSessions, deleteWorkSession, getEmployeeWorkSessionCount, removeEmployee, getJobWorkSessionCount, prepareDataForUpdate }
