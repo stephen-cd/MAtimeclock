@@ -41,8 +41,12 @@ enter.addEventListener('click', () => {
         }, 2000);
         return;
     }
-    addJob(job.value);
-    successMessage.innerHTML = `<span id='success-subject'>Job ${job.value}</span> added successfully.`;
-    mainBody.style.display = 'none';
-    successBody.style.display = 'flex';
+    addJob(job.value).then((res) => {
+        console.log(res);
+        successMessage.innerHTML = `<span id='success-subject'>Job ${job.value}</span> added successfully.`;
+        mainBody.style.display = 'none';
+        successBody.style.display = 'flex';
+    }).catch((err) => {
+        console.log(err);
+    });
 })

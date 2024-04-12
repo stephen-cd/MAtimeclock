@@ -1,3 +1,8 @@
+const log = require('electron-log/main');
+const tLog = log.create({ logId: 'transactions'});
+const path = require('path');
+tLog.transports.file.resolvePathFn = () => path.join(__dirname, '/../logs/transactions.log');
+
 // Initialize DB instance
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
@@ -70,8 +75,17 @@ function removeEmployee(pin) {
 
 // Add a job
 function addJob(job_id) {
-    let statement = `INSERT INTO timeclock_job (job_id, status) VALUES ("${job_id}", "active")`;
-    db.run(statement, (err) => { if (err) return console.log(err.message); });
+    let statement = `INTO timeclock_job (job_id, status) VALUES (?, ?)`;
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            db.run(statement, [job_id, 'active'], (err) => { if (err) {tLog.error(err.message); reject(err.message)} });
+            statement = 'SELECT job_id FROM timeclock_job WHERE job_id=?';
+            db.get(statement, [job_id], (err, row) => {
+                if (err) {tLog.error(err.message); reject(err.message);}
+                else resolve(row);
+            })
+        })
+    })
 }
 
 // Edit a job ID

@@ -1,4 +1,6 @@
 const { app, BrowserWindow } = require('electron');
+const log = require('electron-log');
+const path = require('path');
 
 app.whenReady().then(() => {
     const myWindow = new BrowserWindow({
@@ -11,4 +13,7 @@ app.whenReady().then(() => {
     });
     myWindow.loadFile('templates/index.html');
     myWindow.setMenuBarVisibility(false);
+    const log = require('electron-log');
+    log.initialize();
+    log.transports.file.resolvePathFn = () => path.join(__dirname, '/logs/main.log');
 })
