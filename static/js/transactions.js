@@ -179,7 +179,6 @@ function clockOut(id) {
     }).then((res) => {
         start_time = res['start_time']
         if (start_time.length == 8) start_time = start_time.substring(0, start_time.length - 3);
-        console.log(start_time)
         statement = `UPDATE timeclock_hours SET start_time="${start_time}", end_time="${time}" WHERE id="${id}"`;
         db.run(statement, (err) => { if (err) return console.log(err.message); });
     })
@@ -237,38 +236,44 @@ function getStartTime(id) {
     })
 }
 
-function prepareDataForUpdate() {
-    let employees;
-    let jobs;
-    let hours;
+function getAllEmployees() {
     let statement = 'SELECT * FROM timeclock_employee';
-    new Promise((resolve) => {
+    return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
             resolve(rows);
         });
     }).then((res) => {
-        employees = res;
+        return res;
     })
-    statement = 'SELECT * FROM timeclock_job';
-    new Promise((resolve) => {
+}
+
+function getAllJobs() {
+    let statement = 'SELECT * FROM timeclock_job';
+    return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
             resolve(rows);
         });
     }).then((res) => {
-        jobs = res;
+        return res;
     })
-    statement = 'SELECT * FROM timeclock_hours';
-    new Promise((resolve) => {
+}
+
+function getAllHours() {
+    let statement = 'SELECT * FROM timeclock_hours';
+    return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) return console.log(err.message);
             resolve(rows);
         });
     }).then((res) => {
-        hours = res;
+        return res;
     })
-    return [employees, jobs, hours];
+}
+
+function prepareDataForUpdate() {
+    return Promise.all([getAllEmployees(), getAllJobs(), getAllHours()]);
 }
 
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 

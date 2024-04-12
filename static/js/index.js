@@ -1,43 +1,44 @@
 import { getEmployees, getClockedInEmployees, prepareDataForUpdate } from "./transactions.js";
 
-const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('db.sqlite3');
-
-// let statement = 'INSERT INTO timeclock_employee (pin, first_name, last_name, manager) VALUES ("1111", "Dan", "Newman", "1")'
-// db.run(statement)
-
-let csrf_token;
-fetch('http://127.0.0.1:8000/update-db/', {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-}).then((response) => {
-    response.text().then((response) => {
-            csrf_token = response
-            document.cookie = csrf_token
-            console.log(csrf_token)
-            let data = prepareDataForUpdate();
-            fetch('http://127.0.0.1:8000/update-db/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrf_token,
-            },
-            body: data
-        })
-    })
-})
-
-let pin = document.getElementById('pin');
-let enter = document.getElementById('enter');
-let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let employeeList;
 // Retrieve the employees
 await getEmployees().then((res) => {
     employeeList = res;
 });
+
+if (employeeList.length == 0) {
+    window.location.href = '../templates/manager-add-employee.html';
+}
+
+function updateWebServer() {
+    let csrf_token;
+    fetch('http://127.0.0.1:8000/update-db/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }).then((response) => {
+        response.text().then((response) => {
+            csrf_token = response
+            document.cookie = csrf_token
+            prepareDataForUpdate().then((res) => {
+                fetch('http://127.0.0.1:8000/update-db/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/html; charset=utf-8',
+                        'X-CSRFToken': csrf_token,
+                    },
+                    body: JSON.stringify(res)
+                })
+            });
+        })
+    })
+}
+
+let pin = document.getElementById('pin');
+let enter = document.getElementById('enter');
+let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let admins = employeeList.filter(employee => employee['manager']);
 let employees = employeeList.filter(employee => !employee['manager']);
 let adminPins = admins.map(admin => admin['pin']);
@@ -55,8 +56,6 @@ function currentMsToTime(ms) {
     hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-    console.log(hours, minutes, seconds, totalSeconds)
 
     return [hours, minutes, seconds, totalSeconds];
 }
@@ -97,9 +96,7 @@ await getClockedInEmployees().then((res) => {
         let date = employee['date'];
         let startTimeDate = new Date(`${date}T${startTime}`);
         let currentTime = new Date()
-        console.log(currentTime - startTimeDate)
         let elapsedTime = new Date(currentTime - startTimeDate).getTime();
-        console.log(elapsedTime)
         elapsedTime = currentMsToTime(elapsedTime);
         hours.innerText = elapsedTime[0];
         minutes.innerText = elapsedTime[1];

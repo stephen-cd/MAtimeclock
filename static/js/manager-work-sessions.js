@@ -652,7 +652,6 @@ editSessionSubmit.addEventListener('click', () => {
     let endTime = new Date(`${datePickerHidden.value}T${endTimeDB}`);
     let currentTime = new Date();
     let sessionRangesExceptCurrent = sessionRanges.filter(session => session[0] != startTimeDB && session[1] != endTimeDB)
-    console.log(sessionRangesExceptCurrent)
     if (startTime >= currentTime) {
         errorEdit.style.display = 'block';
         errorEdit.innerText = 'Start time has not occurred yet';

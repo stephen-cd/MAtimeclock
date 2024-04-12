@@ -1,5 +1,6 @@
 import { addEmployee, getEmployees } from './transactions.js';
 
+let employeeAmount;
 let firstName = document.getElementById('first-name');
 let lastName = document.getElementById('last-name');
 let next = document.getElementById('next');
@@ -19,8 +20,27 @@ let backspace = document.getElementById('backspace');
 window.sessionStorage['backToMO'] = true;
 let pins;
 let managerCheckbox = document.getElementById('manager-checkbox');
+let logout = document.getElementById('home');
+let addOtherEmps = document.getElementById('add-other-emps');
+let returnToMenu = document.getElementById('return-to-menu');
+let firstEmployee = document.getElementById('first-employee');
 
 getEmployees().then((res) => {
+    if (res.length == 0) {
+        employeeAmount = 0;
+        managerCheckbox.checked = true;
+        managerCheckbox.setAttribute('onclick', 'return false');
+        back.style.display = 'none';
+        logout.style.display = 'none';
+        back.addEventListener('click', () => {
+            back.style.display = 'none';
+        })
+        next.addEventListener('click', () => {
+            back.style.display = 'block';
+        })
+        manager = true;
+        firstEmployee.innerText = 'Add a manager to begin';
+    }
     pins = res.map(employee => employee['pin']);
 })
 
@@ -51,11 +71,13 @@ lastName.addEventListener('input', () => {
     if (lastName.style.outline) lastName.style.outline = '';
 })
 
-managerCheckbox.addEventListener('change', () => {
-    if (managerCheckbox.checked) {
-        manager = true;
-    }
-})
+if (!managerCheckbox.checked) {
+    managerCheckbox.addEventListener('change', () => {
+        if (managerCheckbox.checked) {
+            manager = true;
+        }
+    })
+}
 
 next.addEventListener('click', () => {
     if (!firstName.value || !lastName.value) {
@@ -87,7 +109,7 @@ enter.addEventListener('click', () => {
             pin.style.outline = '2px solid red';
             return;
         }
-        if (pins.includes(pin.value)) {
+        if (pins && pins.includes(pin.value)) {
             pin.value = '';
             pin.placeholder = 'Please use another PIN';
             pin.style.outline = '2px solid red';
@@ -114,9 +136,21 @@ enter.addEventListener('click', () => {
             return;
         }
         addEmployee(firstName.value, lastName.value, empPin, manager);
-        successMessage.innerHTML = `Employee <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.`;
-        mainBody.style.display = 'none';
-        successBody.style.display = 'flex';
+        if (employeeAmount != 0) {
+            successMessage.innerHTML = `Employee <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.`;
+            mainBody.style.display = 'none';
+            successBody.style.display = 'flex';
+        }
+        else {
+            successMessage.innerHTML = `Manager <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.<br><br>Redirecting to home...`;
+            mainBody.style.display = 'none';
+            successBody.style.display = 'flex';
+            addOtherEmps.style.display = 'none';
+            returnToMenu.style.display = 'none';
+            setTimeout(() => {
+                window.location.href = '../templates/index.html';
+            }, 3000);
+        }
     }
     if (!empPin) {
         empPin = pin.value;
