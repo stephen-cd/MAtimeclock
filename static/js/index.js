@@ -15,18 +15,18 @@ function updateWebServer() {
     fetch('http://127.0.0.1:8000/update-db/', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'text/html; charset=utf-8',
+            'Accept': 'text/html; charset=utf-8'
         }
     }).then((response) => {
         response.text().then((response) => {
             csrf_token = response
-            document.cookie = csrf_token
+            document.cookie = csrf_token;
             prepareDataForUpdate().then((res) => {
                 fetch('http://127.0.0.1:8000/update-db/', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'text/html; charset=utf-8',
+                        'Content-Type': 'text/html; charset=utf-8;',
                         'X-CSRFToken': csrf_token,
                     },
                     body: JSON.stringify(res)
@@ -35,6 +35,8 @@ function updateWebServer() {
         })
     })
 }
+
+updateWebServer();
 
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');
