@@ -160,7 +160,7 @@ function editWorkSession(id, jobId, startTime, endTime) {
 
 // Delete work session
 function deleteWorkSession(id) {
-    let statement = `DELETE FROM timeclock_hours WHERE id="${id}"`;
+    let statement = `DELETE FROM timeclock_hours WHERE id=?`;
     return new Promise((resolve, reject) => {
         db.run(statement, [id], (err) => { 
             if (err) {tLog.error(err); reject(err)}

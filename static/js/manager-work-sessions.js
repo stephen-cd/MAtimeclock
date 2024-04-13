@@ -770,10 +770,8 @@ deleteSessionSubmit.addEventListener('click', () => {
         back.removeEventListener('click', backToEditSessionInstance);
         successSessionsAdd.style.display = 'none';
      }).catch((err) => {
-        deleteSessionSubmit.style.backgroundColor = 'red';
         deleteSessionSubmit.innerText = 'Error';
         setTimeout(() => {
-            deleteSessionSubmit.style.backgroundColor = '#13c296';
             deleteSessionSubmit.innerText = 'Delete';
         }, 2000);
      })
