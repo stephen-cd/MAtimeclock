@@ -135,22 +135,32 @@ enter.addEventListener('click', () => {
             }, 2000);
             return;
         }
-        addEmployee(firstName.value, lastName.value, empPin, manager);
-        if (employeeAmount != 0) {
-            successMessage.innerHTML = `Employee <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.`;
-            mainBody.style.display = 'none';
-            successBody.style.display = 'flex';
-        }
-        else {
-            successMessage.innerHTML = `Manager <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.<br><br>Redirecting to home...`;
-            mainBody.style.display = 'none';
-            successBody.style.display = 'flex';
-            addOtherEmps.style.display = 'none';
-            returnToMenu.style.display = 'none';
+        addEmployee(firstName.value, lastName.value, empPin, manager)
+         .then((res) => {
+            console.log(res)
+            if (employeeAmount != 0) {
+                successMessage.innerHTML = `Employee <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.`;
+                mainBody.style.display = 'none';
+                successBody.style.display = 'flex';
+            }
+            else {
+                successMessage.innerHTML = `Manager <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.<br><br>Redirecting to home...`;
+                mainBody.style.display = 'none';
+                successBody.style.display = 'flex';
+                addOtherEmps.style.display = 'none';
+                returnToMenu.style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = '../templates/index.html';
+                }, 3000);
+            }
+        }).catch((err) => {
+            enter.style.backgroundColor = 'red';
+            enter.innerText = 'Error';
             setTimeout(() => {
-                window.location.href = '../templates/index.html';
-            }, 3000);
-        }
+                enter.style.backgroundColor = '#13c296';
+                enter.innerText = 'Enter';
+            }, 2000);
+        })
     }
     if (!empPin) {
         empPin = pin.value;

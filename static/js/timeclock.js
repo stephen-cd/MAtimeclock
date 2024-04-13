@@ -1,4 +1,4 @@
-import { getJobs, clockIn, checkIfClockedIn, clockOut } from './transactions.js';
+import { getJobs, clockIn, checkIfClockedIn, clockOut, getStartTime } from './transactions.js';
 
 let welcomeHolder = document.getElementById('welcome-holder');
 let welcomeMessage = document.getElementById('welcome-message');
@@ -46,15 +46,27 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
         clockOutBtn.style.display = 'block';
         welcomeMessage.innerText = `Hi ${sessionStorage['first_name']}, you are currently working on Job ${clockedInJob}. Would you like to clock out?`;
         clockOutBtn.addEventListener('click', () => {
-            clockOut(workSessionId);
-            welcomeHolder.style.display = 'none';
-            clockIntoJobsHolder.style.display = 'none';
-            successHolder.style.display = 'flex';
-            successMessage.innerHTML = `You have clocked out of <span id="success-subject">Job ${clockedInJob}</span>.<br><br>Logging out...`;
-            setTimeout(() => {
-                successHolder.style.display = '';
-                window.location.href = '../templates/index.html';
-            }, 3000);
+            getStartTime(workSessionId).then((res) => {
+                let startTime = res['start_time'];
+                clockOut(workSessionId, startTime)
+                 .then((res) => {
+                    welcomeHolder.style.display = 'none';
+                    clockIntoJobsHolder.style.display = 'none';
+                    successHolder.style.display = 'flex';
+                    successMessage.innerHTML = `You have clocked out of <span id="success-subject">Job ${clockedInJob}</span>.<br><br>Logging out...`;
+                    setTimeout(() => {
+                        successHolder.style.display = '';
+                        window.location.href = '../templates/index.html';
+                    }, 3000);
+                 }).catch((err) => {
+                    clockOutBtn.style.backgroundColor = 'red';
+                    clockOutBtn.innerText = 'Error';
+                    setTimeout(() => {
+                        clockOutBtn.style.backgroundColor = '#13c296';
+                        clockOutBtn.innerText = 'Clock Out';
+                    }, 2000);
+                 })
+            })
         })
     }
     else if (!clockedIn) {
@@ -81,14 +93,23 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
         })
         
         clockInBtn.addEventListener('click', () => {
-            clockIn(sessionStorage['pin'], selectedJob);
-            clockIntoJobsHolder.style.display = 'none';
-            successHolder.style.display = 'flex';
-            successMessage.innerHTML = `You are now clocked in for <span id="success-subject">Job ${selectedJob}</span>.<br><br>Logging out...`;
-            setTimeout(() => {
-                successHolder.style.display = '';
-                window.location.href = '../templates/index.html';
-            }, 3000);
+            clockIn(sessionStorage['pin'], selectedJob)
+             .then((res) => {
+                clockIntoJobsHolder.style.display = 'none';
+                successHolder.style.display = 'flex';
+                successMessage.innerHTML = `You are now clocked in for <span id="success-subject">Job ${selectedJob}</span>.<br><br>Logging out...`;
+                setTimeout(() => {
+                    successHolder.style.display = '';
+                    window.location.href = '../templates/index.html';
+                }, 3000);
+             }).catch((err) => {
+                clockInBtn.style.backgroundColor = 'red';
+                clockInBtn.innerText = 'Error';
+                setTimeout(() => {
+                    clockInBtn.style.backgroundColor = '#13c296';
+                    clockInBtn.innerText = 'Clock In'
+                }, 2000);
+             })
         })
     }
 })

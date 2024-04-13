@@ -575,20 +575,22 @@ addSessionSubmit.addEventListener('click', () => {
     }
 
     // Add the session
-    if (!addWorkSession(selectedID, datePickerHidden.value, addSessionJobId.value, startTimeDB, endTimeDB)) {
-        errorAdd.style.display = 'block';
-        errorAdd.innerText = 'Error';
+    addWorkSession(selectedID, datePickerHidden.value, addSessionJobId.value, startTimeDB, endTimeDB)
+     .then((res) => {
+        mainBody.style.display = 'none';
+        addWorkSessionHolder.style.display = '';
+        successBody.style.display = 'flex';
+        successSessionsAdd.style.display = 'flex';
+        successSessionsEdit.style.display = 'none';
+        successMessage.innerHTML = `Session for <span id="success-subject">Job ${addSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
+     }).catch((err) => {
+        addSessionSubmit.style.backgroundColor = 'red';
+        addSessionSubmit.innerText = 'Error';
         setTimeout(() => {
-            errorAdd.style.display = '';
-            errorAdd.innerText = '';
+            addSessionSubmit.style.backgroundColor = '#13c296';
+            addSessionSubmit.innerText = 'Enter';
         }, 2000);
-    }
-    mainBody.style.display = 'none';
-    addWorkSessionHolder.style.display = '';
-    successBody.style.display = 'flex';
-    successSessionsAdd.style.display = 'flex';
-    successSessionsEdit.style.display = 'none';
-    successMessage.innerHTML = `Session for <span id="success-subject">Job ${addSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> added successfully`;
+     })
 })
 
 successAddAnotherSession.addEventListener('click', () => {
@@ -699,20 +701,22 @@ editSessionSubmit.addEventListener('click', () => {
     }
 
     // Edit the session
-    if (!editWorkSession(workSessionId, editSessionJobId.value, startTimeDB, endTimeDB)) {
-        errorEdit.style.display = 'block';
-        errorEdit.innerText = 'Error';
+    editWorkSession(workSessionId, editSessionJobId.value, startTimeDB, endTimeDB)
+     .then((res) => {
+        mainBody.style.display = 'none';
+        addWorkSessionHolder.style.display = '';
+        successBody.style.display = 'flex';
+        successSessionsAdd.style.display = 'none';
+        successSessionsEdit.style.display = 'flex';
+        successMessage.innerHTML = `Session for <span id="success-subject">Job ${editSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
+     }).catch((err) => {
+        editSessionSubmit.style.backgroundColor = 'red';
+        editSessionSubmit.innerText = 'Error';
         setTimeout(() => {
-            errorEdit.style.display = '';
-            errorEdit.innerText = '';
+            editSessionSubmit.style.backgroundColor = '#13c296';
+            editSessionSubmit.innerText = 'Save';
         }, 2000);
-    }
-    mainBody.style.display = 'none';
-    addWorkSessionHolder.style.display = '';
-    successBody.style.display = 'flex';
-    successSessionsAdd.style.display = 'none';
-    successSessionsEdit.style.display = 'flex';
-    successMessage.innerHTML = `Session for <span id="success-subject">Job ${editSessionJobId.value}</span> on <span id="success-subject">${titleDate[1]}/${titleDate[2]}/${titleDate[0]}</span> for <span id="success-subject">${firstName} ${lastName}</span> edited successfully`;
+     })
 })
 
 successBackToSessionsEdit.addEventListener('click', () => {
@@ -756,12 +760,21 @@ deleteSessionBtn.addEventListener('click', () => {
 })
 
 deleteSessionSubmit.addEventListener('click', () => {
-    deleteWorkSession(workSessionId);
-    deleteWorkSessionHolder.style.display = 'none';
-    successBody.style.display = 'flex';
-    successMessage.innerHTML = 'Work session deleted successfully';
-    mainBody.style.display = 'none';
-    successSessionsEdit.style.display = 'flex';
-    back.removeEventListener('click', backToEditSessionInstance);
-    successSessionsAdd.style.display = 'none';
+    deleteWorkSession(workSessionId)
+     .then((res) => {
+        deleteWorkSessionHolder.style.display = 'none';
+        successBody.style.display = 'flex';
+        successMessage.innerHTML = 'Work session deleted successfully';
+        mainBody.style.display = 'none';
+        successSessionsEdit.style.display = 'flex';
+        back.removeEventListener('click', backToEditSessionInstance);
+        successSessionsAdd.style.display = 'none';
+     }).catch((err) => {
+        deleteSessionSubmit.style.backgroundColor = 'red';
+        deleteSessionSubmit.innerText = 'Error';
+        setTimeout(() => {
+            deleteSessionSubmit.style.backgroundColor = '#13c296';
+            deleteSessionSubmit.innerText = 'Delete';
+        }, 2000);
+     })
 })

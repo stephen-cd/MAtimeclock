@@ -139,13 +139,25 @@ editNameEnter.addEventListener('click', () => {
         return;
     }
     if (firstName == firstNameInput.value) successMessage.innerText = 'No changes detected.';
-    else { editEmployeeName(originalPin, firstNameInput.value, lastNameInput.value);
-        successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
-        firstName = firstNameInput.value;
-        lastName = lastNameInput.value;
-        sessionStorage['first_name'] = firstName;
-        sessionStorage['last_name'] = lastName;
-        editingEmp.innerText = `Editing for: ${firstName} ${lastName}`;
+    else { 
+        editEmployeeName(originalPin, firstNameInput.value, lastNameInput.value)
+         .then((res) => {
+            successMessage.innerHTML = `Employee name changed from <span id='success-subject'>${firstName} ${lastName}</span> to <span id='success-subject'>${firstNameInput.value} ${lastNameInput.value}</span> successfully.`;
+            firstName = firstNameInput.value;
+            lastName = lastNameInput.value;
+            if (sessionStorage['pin'] == originalPin) {
+                sessionStorage['first_name'] = firstName;
+                sessionStorage['last_name'] = lastName;
+            }
+            editingEmp.innerText = `Editing for: ${firstName} ${lastName}`;
+         }).catch((err) => {
+            editNameEnter.style.backgroundColor = 'red';
+            editNameEnter.innerText = 'Error';
+            setTimeout(() => {
+                editNameEnter.style.backgroundColor = '#13c296';
+                editNameEnter.innerText = 'Save';
+            }, 2000);
+         });
     }
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
@@ -213,12 +225,21 @@ editPinEnter.addEventListener('click', () => {
             }, 2000);
             return;
         }
-        editEmployeePin(originalPin, empPin);
-        successMessage.innerHTML = `PIN for <span id='success-subject'>${firstName} ${lastName}</span> changed successfully.`;
-        mainBody.style.display = 'none';
-        successBody.style.display = 'flex';
-        successChangePin.parentElement.style.display = 'none';
-        successChangeName.parentElement.style.display = '';
+        editEmployeePin(originalPin, empPin)
+         .then((res) => {
+            successMessage.innerHTML = `PIN for <span id='success-subject'>${firstName} ${lastName}</span> changed successfully.`;
+            mainBody.style.display = 'none';
+            successBody.style.display = 'flex';
+            successChangePin.parentElement.style.display = 'none';
+            successChangeName.parentElement.style.display = '';
+         }).catch((err) => {
+            editPinEnter.style.backgroundColor = 'red';
+            editPinEnter.innerText = 'Error';
+            setTimeout(() => {
+                editPinEnter.style.backgroundColor = '#13c296';
+                editPinEnter.innerText = 'Save';
+            }, 2000);
+         });
     }
     if (!empPin) {
         empPin = pin.value;
@@ -239,13 +260,20 @@ removeEmp.addEventListener('click', async () => {
     })
 })
 
-removeEmpSubmit.addEventListener('click', async () => {
-    removeEmployee(employeePin);
-    successMessage.innerHTML = `Employee <span id='success-subject'>${firstName} ${lastName}</span> removed successfully.`;
-    mainBody.style.display = 'none';
-    successBody.style.display = 'flex';
-    successChangePin.parentElement.style.display = 'none';
-    successChangeName.parentElement.style.display = '';
+removeEmpSubmit.addEventListener('click', () => {
+    removeEmployee(employeePin)
+     .then((res) => {
+        successMessage.innerHTML = `Employee <span id='success-subject'>${firstName} ${lastName}</span> removed successfully.`;
+        mainBody.style.display = 'none';
+        successBody.style.display = 'flex';
+        successChangePin.parentElement.style.display = 'none';
+        successChangeName.parentElement.style.display = 'none';
+     }).catch((err) => {
+        removeEmpSubmit.innerText = 'Error';
+        setTimeout(() => {
+            removeEmpSubmit.innerText = 'Remove';
+        }, 2000);
+     });
 })
 
 successChangePin.addEventListener('click', () => {

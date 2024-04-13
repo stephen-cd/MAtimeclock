@@ -54,19 +54,25 @@ let noSessionsActive = async () => {
 }
 
 let removeJobSubmit = () => {
-    removeJob(jobId);
-    if ([...selectJob.children].length != 0) successMessage.innerHTML = `Job <span id='success-subject'>${jobId}</span> removed successfully.`;
-    else successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.<br>No jobs remaining.`;
-    successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.`;
-    mainBody.style.display = 'none';
-    successBody.style.display = 'flex';
-    backToJob.style.display = 'none';
-    let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
-    selectJobOption.remove();
-    if ([...selectJob.children].length == 0) {
-        editAnotherJob.style.display = 'none';
-    }
-    delete jobDict[selectedID];
+    removeJob(jobId).then((res) => {
+        if ([...selectJob.children].length != 0) successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.`;
+        else successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.<br>No jobs remaining.`;
+        successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> removed successfully.`;
+        mainBody.style.display = 'none';
+        successBody.style.display = 'flex';
+        backToJob.style.display = 'none';
+        let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
+        selectJobOption.remove();
+        if ([...selectJob.children].length == 0) {
+            editAnotherJob.style.display = 'none';
+        }
+        delete jobDict[selectedID];
+    }).catch((err) => {
+        removeJobEnter.innerText = 'Error';
+        setTimeout(() => {
+            removeJobEnter.innerText = 'Remove';
+        }, 2000);
+    });
 }
 
 let sessionsActiveInstance = sessionsActive;
@@ -219,48 +225,75 @@ editJobIdEnter.addEventListener('click', () => {
         }, 2000);
         return;
     }
-    editJobId(jobId, job.value);
-    successMessage.innerHTML = `Job ID changed from <span id='success-subject'>${jobId}</span> to <span id='success-subject'>${job.value}</span> successfully.`;
-    mainBody.style.display = 'none';
-    successBody.style.display = 'flex';
-    jobDict[selectedID]['jobId'] = job.value;
-    jobId = job.value;
-    backToJob.style.display = 'block';
-    editAnotherJob.style.display = 'block';
-    if (status == 'active') {
-        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
-    }
-    else if (status == 'complete') {
-        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
-    }
-    editingJob.innerText = `Editing Job: ${jobId}`;
-    keypadHolder.style.display = 'none';
-    let selectedOption = [...selectJob.querySelectorAll('option')].filter(option => option.selected)[0];
-    selectedOption.innerText = `${jobId} ${status}`;
+    editJobId(jobId, job.value)
+     .then((res) => {
+        successMessage.innerHTML = `Job ID changed from <span id='success-subject'>${jobId}</span> to <span id='success-subject'>${job.value}</span> successfully.`;
+        mainBody.style.display = 'none';
+        successBody.style.display = 'flex';
+        jobDict[selectedID]['jobId'] = job.value;
+        jobId = job.value;
+        backToJob.style.display = 'block';
+        editAnotherJob.style.display = 'block';
+        if (status == 'active') {
+            completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
+        }
+        else if (status == 'complete') {
+            completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
+        }
+        editingJob.innerText = `Editing Job: ${jobId}`;
+        keypadHolder.style.display = 'none';
+        let selectedOption = [...selectJob.querySelectorAll('option')].filter(option => option.selected)[0];
+        selectedOption.innerText = `${jobId} ${status}`;
+     }).catch((err) => {
+        editJobIdEnter.style.backgroundColor = 'red';
+        editJobIdEnter.innerText = 'Error';
+        setTimeout(() => {
+            editJobIdEnter.style.backgroundColor = '#13c296';
+            editJobIdEnter.innerText = 'Save';
+        }, 2000);
+     });
 })
 
 completeOrReopenJobEnter.addEventListener('click', () => {
     if (status == 'active') {
-        editJobStatus(jobId, 'complete');
-        successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> marked as complete successfully.`;
-        status = 'complete'
-        completeOrReopenJob.innerText = 'Reopen Job';
-        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
-        completeOrReopenJobEnter.innerText = 'Reopen';
-        let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
-        selectJobOption.innerText = `${jobId} ${status}`;
-        jobDict[selectedID]['status'] = status;
+        editJobStatus(jobId, 'complete')
+         .then((res) => {
+            successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> marked as complete successfully.`;
+            status = 'complete'
+            completeOrReopenJob.innerText = 'Reopen Job';
+            completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to active?`;
+            completeOrReopenJobEnter.innerText = 'Reopen';
+            let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
+            selectJobOption.innerText = `${jobId} ${status}`;
+            jobDict[selectedID]['status'] = status;
+         }).catch((err) => {
+            completeOrReopenJobEnter.style.backgroundColor = 'red';
+            completeOrReopenJobEnter.innerText = 'Error';
+            setTimeout(() => {
+                completeOrReopenJobEnter.style.backgroundColor = '#13c296';
+                completeOrReopenJobEnter.innerText = 'Complete';
+            }, 2000);
+         });
     }
     else if (status == 'complete') {
-        editJobStatus(jobId, 'active');
-        successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> marked as active successfully.`;
-        status = 'active';
-        completeOrReopenJob.innerText = 'Complete Job'
-        completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
-        completeOrReopenJobEnter.innerText = 'Complete';
-        let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
-        selectJobOption.innerText = `${jobId} ${status}`;
-        jobDict[selectedID]['status'] = status;
+        editJobStatus(jobId, 'active')
+         .then((res) => {
+            successMessage.innerHTML = `<span id='success-subject'>Job ${jobId}</span> marked as active successfully.`;
+            status = 'active';
+            completeOrReopenJob.innerText = 'Complete Job'
+            completeOrReopenMessage.innerHTML = `Change status of job ${jobId} to complete?`;
+            completeOrReopenJobEnter.innerText = 'Complete';
+            let selectJobOption = [...selectJob.children].filter(option => option.innerText.includes(jobId))[0];
+            selectJobOption.innerText = `${jobId} ${status}`;
+            jobDict[selectedID]['status'] = status;
+         }).catch((err) => {
+            completeOrReopenJobEnter.style.backgroundColor = 'red';
+            completeOrReopenJobEnter.innerText = 'Error';
+            setTimeout(() => {
+                completeOrReopenJobEnter.style.backgroundColor = '#13c296';
+                completeOrReopenJobEnter.innerText = 'Reopen';
+            }, 2000);
+         });
     }
     mainBody.style.display = 'none';
     successBody.style.display = 'flex';
