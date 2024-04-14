@@ -1,14 +1,6 @@
 import { getEmployees, getClockedInEmployees, prepareDataForUpdate } from "./transactions.js";
 
-let employeeList;
-// Retrieve the employees
-await getEmployees().then((res) => {
-    employeeList = res;
-});
-
-if (employeeList.length == 0) {
-    window.location.href = '../templates/manager-add-employee.html';
-}
+const cron = require('cron');
 
 function updateWebServer() {
     let csrf_token;
@@ -36,7 +28,23 @@ function updateWebServer() {
     })
 }
 
-updateWebServer();
+new cron.CronJob(
+    '0 47 19 * * *',
+    updateWebServer,
+    console.log('data sent'),
+    true,
+    'America/New_York'
+);
+
+let employeeList;
+// Retrieve the employees
+await getEmployees().then((res) => {
+    employeeList = res;
+});
+
+if (employeeList.length == 0) {
+    window.location.href = '../templates/manager-add-employee.html';
+}
 
 let pin = document.getElementById('pin');
 let enter = document.getElementById('enter');
