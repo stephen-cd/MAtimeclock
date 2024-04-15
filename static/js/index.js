@@ -29,7 +29,7 @@ function updateWebServer() {
 }
 
 new cron.CronJob(
-    '0 47 19 * * *',
+    '0 0 17 * * *',
     updateWebServer,
     console.log('data sent'),
     true,
