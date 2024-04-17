@@ -1,5 +1,4 @@
 import { addJob, getJobs } from "./transactions.js";
-import { manualUpdate } from "../../config.js";
 
 let keypadButtons = [...document.getElementsByClassName('keypad-button')];
 let job = document.getElementById('job');
@@ -11,7 +10,7 @@ let mainBody = document.getElementById('main-body')
 let jobs;
 let logout = document.getElementById('home');
 
-manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
+sessionStorage['manualUpdate'] == 'true' && sessionStorage['manager'] == '1' ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 sessionStorage['backToMO'] = 'true';
 

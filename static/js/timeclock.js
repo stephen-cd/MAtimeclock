@@ -1,5 +1,4 @@
 import { getJobs, clockIn, checkIfClockedIn, clockOut, getStartTime } from './transactions.js';
-import { manualUpdate } from "../../config.js";
 
 let welcomeHolder = document.getElementById('welcome-holder');
 let welcomeMessage = document.getElementById('welcome-message');
@@ -17,7 +16,7 @@ let workSessionId;
 let logout = document.getElementById('logout');
 let back = document.getElementById('back');
 
-manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
+sessionStorage['manualUpdate'] == 'true' && sessionStorage['manager'] == '1' ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 if (sessionStorage['manager'] == '1') {
     let backToTimeClock = () => {

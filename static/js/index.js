@@ -1,22 +1,20 @@
-import { getEmployees, getClockedInEmployees, updateWebServer, forceClockOut } from "./transactions.js";
-import { dbUpdateTime, manualUpdate } from "../../config.js";
+const { ipcRenderer } = require('electron')
+import { getEmployees, getClockedInEmployees, forceClockOut, updateWebServer } from "./transactions.js";
+const dns = require('dns');
 
-const cron = require('cron');
-
-if (manualUpdate) {
-    updateWebServer();
-}
-else {
-    if (!sessionStorage['cronJob']) {
-        new cron.CronJob (
-            dbUpdateTime,
-            updateWebServer,
-            sessionStorage['cronJob'] = 'true',
-            true,
-            'America/New_York'
-        );
+dns.resolve('www.google.com', (err) => {
+    if (err) {
+        new window.Notification('Warning', { body: 'Offline - Internet connection required to sync to web server.' });
     }
-}
+})
+
+ipcRenderer.send('manual-update', []);
+ipcRenderer.on('manual-update-reply', (e, args) => {
+    sessionStorage['manualUpdate'] = args[0];
+    sessionStorage['host'] = args[1];
+})
+
+if (sessionStorage['manualUpdate'] == 'true') updateWebServer();
 
 let employeeList;
 // Retrieve the employees
@@ -37,7 +35,6 @@ let adminPins = admins.map(admin => admin['pin']);
 let employeePins = employees.map(employee => employee['pin']);
 let backspace = document.getElementById('backspace');
 let currentlyClockedInEmployees = document.getElementById('currently-clocked-in-employees');
-let logout = document.getElementById('home');
 sessionStorage.setItem('backToMO', 'false');
 
 function currentMsToTime(ms) {
@@ -154,5 +151,3 @@ enter.addEventListener('click', () => {
         enter.parentElement.href = '../templates/timeclock.html';
     }
 })
-
-export { updateWebServer }

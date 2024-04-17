@@ -129,6 +129,10 @@ button {
     width: 50%;
 }
 
+#currently-clocked-in-employees li span:nth-child(2) {
+    width: 20%;
+}
+
 .keypad-button-enter {
     height: 100%;
     width: 20%;

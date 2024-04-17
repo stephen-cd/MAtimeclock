@@ -1,5 +1,4 @@
 import { addEmployee, getEmployees } from './transactions.js';
-import { manualUpdate } from "../../config.js";
 
 let employeeAmount;
 let firstName = document.getElementById('first-name');
@@ -26,7 +25,7 @@ let addOtherEmps = document.getElementById('add-other-emps');
 let returnToMenu = document.getElementById('return-to-menu');
 let firstEmployee = document.getElementById('first-employee');
 
-manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
+sessionStorage['manualUpdate'] == 'true' && sessionStorage['manager'] == '1' ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 getEmployees().then((res) => {
     if (res.length == 0) {

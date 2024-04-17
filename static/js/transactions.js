@@ -1,30 +1,68 @@
-import { host } from "../../config.js";
-
 const log = require('electron-log/main');
-const tLog = log.create({ logId: 'transactions'});
 const path = require('path');
+
+const tLog = log.create({ logId: 'transactions'});
 tLog.transports.file.resolvePathFn = () => path.join(__dirname, '/../logs/transactions.log');
 
 // Initialize DB instance
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('sqlite3');
 let db = new sqlite3.Database('db.sqlite3');
 
-function updateWebServer() {
-    return new Promise((resolve, reject) => {
+async function getAllEmployees() {
+    let statement = 'SELECT * FROM timeclock_employee';
+    return new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) {tLog.error(err); reject(err)};
+            resolve(rows);
+        });
+    }).then((res) => {
+        return res;
+    })
+}
+
+async function getAllJobs() {
+    let statement = 'SELECT * FROM timeclock_job';
+    return new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) {tLog.error(err); reject(err)};
+            resolve(rows);
+        });
+    }).then((res) => {
+        return res;
+    })
+}
+
+async function getAllHours() {
+    let statement = 'SELECT * FROM timeclock_hours';
+    return new Promise((resolve) => {
+        db.all(statement, (err, rows) => { 
+            if (err) {tLog.error(err); reject(err)};
+            resolve(rows);
+        });
+    }).then((res) => {
+        return res;
+    })
+}
+
+async function prepareDataForUpdate() {
+    return Promise.all([await getAllEmployees(), await getAllJobs(), await getAllHours()]);
+}
+
+async function updateWebServer() {
+    return new Promise(async (resolve, reject) => {
         let csrf_token;
-        let error;
-        fetch(host, {
+        const get = await fetch(sessionStorage['host'], {
             method: 'GET',
             headers: {
                 'Content-Type': 'text/html; charset=utf-8',
                 'Accept': 'text/html; charset=utf-8'
             }
-        }).then((response) => {
-            response.text().then((response) => {
+        })
+        if (get.ok) {
+            get.text().then((response) => {
                 csrf_token = response
-                document.cookie = csrf_token;
-                prepareDataForUpdate().then((res, err) => {
-                    fetch(host, {
+                prepareDataForUpdate().then(async (res) => {
+                    const post = await fetch(sessionStorage['host'], {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/html; charset=utf-8;',
@@ -32,17 +70,12 @@ function updateWebServer() {
                         },
                         body: JSON.stringify(res)
                     })
-                }).catch((err) => {
-                    error = err;
-                });
-            }).catch((err) => {
-                error = err;
+                    if (post.ok) resolve('success');
+                    else reject(post.status);
+                })
             })
-        }).catch((err) => {
-            error = err;
-        })
-        if (error) reject(error);
-        else resolve('success');
+        }
+        else reject(get.status);
     }).then((res) => {
         console.log(res);
     }).catch((err) => {
@@ -309,46 +342,6 @@ async function getJobWorkSessionCount(job_id) {
     })
 }
 
-function getAllEmployees() {
-    let statement = 'SELECT * FROM timeclock_employee';
-    return new Promise((resolve) => {
-        db.all(statement, (err, rows) => { 
-            if (err) {tLog.error(err); reject(err)};
-            resolve(rows);
-        });
-    }).then((res) => {
-        return res;
-    })
-}
-
-function getAllJobs() {
-    let statement = 'SELECT * FROM timeclock_job';
-    return new Promise((resolve) => {
-        db.all(statement, (err, rows) => { 
-            if (err) {tLog.error(err); reject(err)};
-            resolve(rows);
-        });
-    }).then((res) => {
-        return res;
-    })
-}
-
-function getAllHours() {
-    let statement = 'SELECT * FROM timeclock_hours';
-    return new Promise((resolve) => {
-        db.all(statement, (err, rows) => { 
-            if (err) {tLog.error(err); reject(err)};
-            resolve(rows);
-        });
-    }).then((res) => {
-        return res;
-    })
-}
-
-function prepareDataForUpdate() {
-    return Promise.all([getAllEmployees(), getAllJobs(), getAllHours()]);
-}
-
 function forceClockOut(pin, startTime) {
     let date = new Date();
     date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
@@ -364,4 +357,4 @@ function forceClockOut(pin, startTime) {
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          getEmployeeWorkSessions, addWorkSession, editWorkSession, clockIn, clockOut, checkIfClockedIn, getClockedInEmployees,
          checkForInProgressWorkSessions, deleteWorkSession, getEmployeeWorkSessionCount, removeEmployee, getJobWorkSessionCount,
-         prepareDataForUpdate, getStartTime, updateWebServer, forceClockOut }
+         getStartTime, forceClockOut, updateWebServer }
