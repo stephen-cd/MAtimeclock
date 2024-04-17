@@ -1,4 +1,5 @@
 import { addEmployee, getEmployees } from './transactions.js';
+import { manualUpdate } from "../../config.js";
 
 let employeeAmount;
 let firstName = document.getElementById('first-name');
@@ -24,6 +25,8 @@ let logout = document.getElementById('home');
 let addOtherEmps = document.getElementById('add-other-emps');
 let returnToMenu = document.getElementById('return-to-menu');
 let firstEmployee = document.getElementById('first-employee');
+
+manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 getEmployees().then((res) => {
     if (res.length == 0) {
@@ -137,7 +140,6 @@ enter.addEventListener('click', () => {
         }
         addEmployee(firstName.value, lastName.value, empPin, manager)
          .then((res) => {
-            console.log(res)
             if (employeeAmount != 0) {
                 successMessage.innerHTML = `Employee <span id='success-subject'>${firstName.value} ${lastName.value}</span> added successfully.`;
                 mainBody.style.display = 'none';

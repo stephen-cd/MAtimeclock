@@ -1,4 +1,5 @@
 import { getJobs, editJobId, editJobStatus, removeJob, checkForInProgressWorkSessions, getJobWorkSessionCount } from "./transactions.js";
+import { manualUpdate } from "../../config.js";
 
 let jobDict = {};
 let backspace = document.getElementById('backspace');
@@ -32,6 +33,9 @@ let completeOrReopenMessage = document.getElementById('complete-or-reopen-messag
 let removeMessage = document.getElementById('remove-message');
 let jobIds;
 let removeJobDetails = document.getElementById('remove-job-details');
+let logout = document.getElementById('home');
+
+manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 let sessionsActive = () => {
     removeJobBtn.innerText = 'Sessions Active';

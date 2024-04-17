@@ -1,40 +1,22 @@
-import { getEmployees, getClockedInEmployees, prepareDataForUpdate } from "./transactions.js";
+import { getEmployees, getClockedInEmployees, updateWebServer, forceClockOut } from "./transactions.js";
+import { dbUpdateTime, manualUpdate } from "../../config.js";
 
 const cron = require('cron');
 
-function updateWebServer() {
-    let csrf_token;
-    fetch('http://127.0.0.1:8000/update-db/', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Accept': 'text/html; charset=utf-8'
-        }
-    }).then((response) => {
-        response.text().then((response) => {
-            csrf_token = response
-            document.cookie = csrf_token;
-            prepareDataForUpdate().then((res) => {
-                fetch('http://127.0.0.1:8000/update-db/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/html; charset=utf-8;',
-                        'X-CSRFToken': csrf_token,
-                    },
-                    body: JSON.stringify(res)
-                })
-            });
-        })
-    })
+if (manualUpdate) {
+    updateWebServer();
 }
-
-new cron.CronJob(
-    '0 0 17 * * *',
-    updateWebServer,
-    console.log('data sent'),
-    true,
-    'America/New_York'
-);
+else {
+    if (!sessionStorage['cronJob']) {
+        new cron.CronJob (
+            dbUpdateTime,
+            updateWebServer,
+            sessionStorage['cronJob'] = 'true',
+            true,
+            'America/New_York'
+        );
+    }
+}
 
 let employeeList;
 // Retrieve the employees
@@ -55,6 +37,7 @@ let adminPins = admins.map(admin => admin['pin']);
 let employeePins = employees.map(employee => employee['pin']);
 let backspace = document.getElementById('backspace');
 let currentlyClockedInEmployees = document.getElementById('currently-clocked-in-employees');
+let logout = document.getElementById('home');
 sessionStorage.setItem('backToMO', 'false');
 
 function currentMsToTime(ms) {
@@ -84,6 +67,16 @@ function pad(val) {
 await getClockedInEmployees().then((res) => {
     // Append clocked in employees to Currently Clocked In section
     res.forEach(employee => {
+        let forceClockedOutEmployees = [];
+        let date = employee['date'];
+        let startTime = employee['start_time'];
+        let currentTime = new Date();
+        let startTimeDate = new Date(`${date}T${startTime}`);
+        if (currentTime.getDate() != startTimeDate.getDate()) {
+            forceClockOut(employee['pin'], employee['start_time'].substring(0, employee['start_time'].length - 3)).then((res) => {
+                forceClockedOutEmployees.push(res);
+            })
+        }
         let row = document.createElement('li');
         let name = document.createElement('span');
         let job = document.createElement('span');
@@ -102,10 +95,6 @@ await getClockedInEmployees().then((res) => {
         timer.appendChild(minutes);
         row.appendChild(timer);
         currentlyClockedInEmployees.appendChild(row);
-        let startTime = employee['start_time'];
-        let date = employee['date'];
-        let startTimeDate = new Date(`${date}T${startTime}`);
-        let currentTime = new Date()
         let elapsedTime = new Date(currentTime - startTimeDate).getTime();
         elapsedTime = currentMsToTime(elapsedTime);
         hours.innerText = elapsedTime[0];
@@ -165,3 +154,5 @@ enter.addEventListener('click', () => {
         enter.parentElement.href = '../templates/timeclock.html';
     }
 })
+
+export { updateWebServer }

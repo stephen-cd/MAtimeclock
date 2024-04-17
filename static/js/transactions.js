@@ -1,3 +1,5 @@
+import { host } from "../../config.js";
+
 const log = require('electron-log/main');
 const tLog = log.create({ logId: 'transactions'});
 const path = require('path');
@@ -6,6 +8,47 @@ tLog.transports.file.resolvePathFn = () => path.join(__dirname, '/../logs/transa
 // Initialize DB instance
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('db.sqlite3');
+
+function updateWebServer() {
+    return new Promise((resolve, reject) => {
+        let csrf_token;
+        let error;
+        fetch(host, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/html; charset=utf-8',
+                'Accept': 'text/html; charset=utf-8'
+            }
+        }).then((response) => {
+            response.text().then((response) => {
+                csrf_token = response
+                document.cookie = csrf_token;
+                prepareDataForUpdate().then((res, err) => {
+                    fetch(host, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'text/html; charset=utf-8;',
+                            'X-CSRFToken': csrf_token,
+                        },
+                        body: JSON.stringify(res)
+                    })
+                }).catch((err) => {
+                    error = err;
+                });
+            }).catch((err) => {
+                error = err;
+            })
+        }).catch((err) => {
+            error = err;
+        })
+        if (error) reject(error);
+        else resolve('success');
+    }).then((res) => {
+        console.log(res);
+    }).catch((err) => {
+        log.error(err);
+    })
+}
 
 // Select employee records
 async function getEmployees() {
@@ -226,7 +269,7 @@ function clockOut(id, startTime) {
 
 // Get clocked in employees
 async function getClockedInEmployees() {
-    let statement = `SELECT y.job_id, x.first_name, x.last_name, y.date, y.start_time FROM timeclock_employee AS x INNER JOIN timeclock_hours AS y ON x.pin = y.pin WHERE y.end_time=''`;
+    let statement = `SELECT y.job_id, x.first_name, x.last_name, y.date, y.start_time, x.pin FROM timeclock_employee AS x INNER JOIN timeclock_hours AS y ON x.pin = y.pin WHERE y.end_time=''`;
     return new Promise((resolve) => {
         db.all(statement, (err, rows) => { 
             if (err) {tLog.error(err); reject(err)};
@@ -306,7 +349,19 @@ function prepareDataForUpdate() {
     return Promise.all([getAllEmployees(), getAllJobs(), getAllHours()]);
 }
 
+function forceClockOut(pin, startTime) {
+    let date = new Date();
+    date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    let statement = 'UPDATE timeclock_hours SET start_time=?, end_time="23:59" WHERE pin=? AND end_time=? AND date!=?';
+    return new Promise((resolve, reject) => {
+        db.run(statement, [startTime, pin, '', date], (err) => { 
+            if (err) {tLog.error(err); reject(err)}
+            else resolve(pin);
+        });
+    })
+}
+
 export { getEmployees, getJobs, addEmployee, editEmployeeName, editEmployeePin, addJob, editJobId, editJobStatus, removeJob, 
          getEmployeeWorkSessions, addWorkSession, editWorkSession, clockIn, clockOut, checkIfClockedIn, getClockedInEmployees,
          checkForInProgressWorkSessions, deleteWorkSession, getEmployeeWorkSessionCount, removeEmployee, getJobWorkSessionCount,
-         prepareDataForUpdate, getStartTime }
+         prepareDataForUpdate, getStartTime, updateWebServer, forceClockOut }

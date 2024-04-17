@@ -1,4 +1,5 @@
 import { getJobs } from "./transactions.js";
+import { manualUpdate } from "../../config.js";
 
 let timeClock = document.getElementById('time-clock');
 let managerOptions1 = document.getElementById('manager-options-1');
@@ -10,6 +11,9 @@ let welcomeMessage = document.getElementById('welcome-message');
 let editJobs = document.getElementById('manager-edit-job');
 let jobs;
 let activeJobs;
+let logout = document.getElementById('home');
+
+manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 if (sessionStorage.getItem('backToMO') == 'true') {
     managerOptions1.style.display = 'none';

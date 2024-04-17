@@ -1,4 +1,6 @@
 import { getEmployees, getEmployeeWorkSessions, getJobs, addWorkSession, editWorkSession, deleteWorkSession } from "./transactions.js";
+import { manualUpdate } from "../../config.js";
+
 const datepicker = require('js-datepicker');
 
 let empDict = {};
@@ -53,6 +55,9 @@ let originalSessionStart;
 let originalSessionEnd;
 let originalJob;
 let sessionRanges;
+let logout = document.getElementById('home');
+
+manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 const picker = datepicker('#date-picker', {
     maxDate: new Date(),

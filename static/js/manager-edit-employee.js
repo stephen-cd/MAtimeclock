@@ -1,4 +1,5 @@
 import { getEmployees, editEmployeeName, editEmployeePin, getEmployeeWorkSessionCount, removeEmployee } from "./transactions.js";
+import { manualUpdate } from "../../config.js";
 
 let empDict = {};
 let selectEmployeeHolder = document.getElementById('select-employee-holder');
@@ -39,6 +40,9 @@ let removeEmpName = document.getElementById('remove-emp-name');
 let removeEmpDetails = document.getElementById('remove-emp-details');
 let employeePin;
 let removeEmpSubmit = document.getElementById('remove-emp-submit');
+let logout = document.getElementById('home');
+
+manualUpdate ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 await getEmployees().then((res) => {
     numberOfEmps = res.length;
