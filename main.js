@@ -88,15 +88,13 @@ async function updateWebServer() {
 }
 
 function setUpdateJob() {
-    if (!manualUpdate) {
-        new cron.CronJob (
-            dbUpdateTime,
-            updateWebServer,
-            console.log('job initiated'),
-            true,
-            'America/New_York'
-        );
-    }
+    new cron.CronJob (
+        dbUpdateTime,
+        updateWebServer,
+        console.log('job initiated'),
+        true,
+        'America/New_York'
+    );
 }
 
 app.whenReady().then(() => {
