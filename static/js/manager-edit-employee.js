@@ -41,7 +41,7 @@ let employeePin;
 let removeEmpSubmit = document.getElementById('remove-emp-submit');
 let logout = document.getElementById('home');
 
-manualUpdate && sessionStorage['manager'] == '1' ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
+sessionStorage['manualUpdate'] == 'true' && sessionStorage['manager'] == '1' ? (logout.innerText = 'Log Out & Save', logout.style.width = '200px') : 'Log Out';
 
 await getEmployees().then((res) => {
     numberOfEmps = res.length;
