@@ -10,7 +10,7 @@ Note: This application was built to be used with a Raspberry Pi and the official
 
 <h3>Prerequisites</h3>
 
-The back-end (MAtimeclock-BE) has been configured and a copy of the SQLite database file has been obtained.
+The back-end (MAtimeclock-BE) has been configured and a copy of the SQLite database file has been obtained.<br>
 Node.js and Electron are installed and a directory has been created for the application. Instructions for this can be found [here](https://www.electronjs.org/docs/latest/tutorial/quick-start). Please follow up until and including setting the start command.
 
 <h3>Steps</h3>
