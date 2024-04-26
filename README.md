@@ -10,10 +10,9 @@ Note: This application was built to be used with a Raspberry Pi and the official
 
 <h3>Prerequisites</h3>
 
-
 It is recommended that the back-end (MAtimeclock-BE) is configured before the front-end so that the user can easily get a SQLite file with the correct schema.
 
-1) After creating an appropriate directory for the application, ensure that electron
+1) Node.js and Electron are installed and a directory has been created for the application. Instructions for this can be found [here](https://www.electronjs.org/docs/latest/tutorial/quick-start)
 
 Add the sqlite file to the same directory as main.js<br>
 npm install<br>
