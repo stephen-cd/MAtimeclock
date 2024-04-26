@@ -38,16 +38,16 @@ In Manager Options, a manager can add/edit employees, jobs, and work sessions.
 
 To add an employee, a manager enters a first name, last name, whether or not they are a manager, and a PIN (entered and confirmed). PINs must be unique.
 Editing employees involves selecting an employee and choosing the action that needs to be taken (change name, change pin, remove employee). 
-  - Change Name brings the manager to the name portion of adding an employee except the fields are pre-populated with the employee info. 
-  - Change PIN brings the manager to a keypad where they can enter and confirm a new PIN. 
-  - Removing an employee also deletes all of their work sessions.
+Change Name brings the manager to the name portion of adding an employee except the fields are pre-populated with the employee info. 
+Change PIN brings the manager to a keypad where they can enter and confirm a new PIN. 
+Removing an employee also deletes all of their work sessions.
 
 <h3>Add/Edit Job</h3>
 To add a job, a manager enters an associated job ID and submits. Job IDs must be unique.<br>
 Editing jobs involves selecting a job and choosing the action that needs to be taken (change job ID, complete/reopen, remove job).<br>
-  - Change job ID brings the manager to the same keypad with the current job ID pre-populated.<br>
-  - Complete/reopen will allow the manager to complete or reopen a job. If a job is currently active (jobs are set to active by default when created), the manager will be able to complete the job. If the job is already        complete, they will be able to reopen it. Only active jobs will show up in the list of time clock jobs.<br>
-  - Removing a job also deletes all of the work sessions associated with that job.
+Change job ID brings the manager to the same keypad with the current job ID pre-populated.<br>
+Complete/reopen will allow the manager to complete or reopen a job. If a job is currently active (jobs are set to active by default when created), the manager will be able to complete the job. If the job is already        complete, they will be able to reopen it. Only active jobs will show up in the list of time clock jobs.<br>
+Removing a job also deletes all of the work sessions associated with that job.
 
 <h3>Add/Edit Work Sessions</h3>
 When Work Sessions is clicked, an employee must be selected, then a date. The manager will then see a horizontal bar chart displaying an employees work hours for that day, with time (6 AM - 8 PM currently) on the X-axis and jobs on the Y-axis. On this same screen, a manager can either add, edit, or delete a work session. They can also click on a bar to edit a work session if any are present.<br>
