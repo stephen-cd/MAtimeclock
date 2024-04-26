@@ -46,7 +46,7 @@ Editing employees involves selecting an employee and choosing the action that ne
 To add a job, a manager enters an associated job ID and submits. Job IDs must be unique.
 Editing jobs involves selecting a job and choosing the action that needs to be taken (change job ID, complete/reopen, remove job).
   - Change job ID brings the manager to the same keypad with the current job ID pre-populated.
-  - Complete/reopen will allow the manager to complete or reopen a job. If a job is currently active (jobs are set to active by default when created), the manager will be able to complete the job. If the job is already complete, they will be able to reopen it. Only active jobs will show up in the list of time clock jobs.
+  - Complete/reopen will allow the manager to complete or reopen a job. If a job is currently active (jobs are set to active by default when created), the manager will be able to complete the job. If the job is already        complete, they will be able to reopen it. Only active jobs will show up in the list of time clock jobs.
   - Removing a job also deletes all of the work sessions associated with that job.
 
 <h3>Add/Edit Work Sessions</h3>
