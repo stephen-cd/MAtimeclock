@@ -5,7 +5,7 @@ const cron = require('cron');
 
 // configurable variables here////////////////////
 const dbUpdateTime = '0 0 17 * * *';
-const manualUpdate = false;
+const manualUpdate = true;
 const host = 'http://127.0.0.1:8000/update-db/';
 //////////////////////////////////////////////////
 

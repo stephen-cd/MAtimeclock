@@ -78,6 +78,7 @@ checkIfClockedIn(sessionStorage['pin']).then((res) => {
             welcomeHolder.style.display = 'none';
             clockIntoJobsHolder.style.display = 'flex';
             getJobs().then((res) => {
+                res = res.filter(job => job['status'] == 'active');
                 let numberOfJobs = res.length;
                 numberOfJobs == 1 ? clockIntoJobs.setAttribute('size', '2') : clockIntoJobs.setAttribute('size', numberOfJobs);
                 res.forEach(job => {

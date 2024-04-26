@@ -73,6 +73,7 @@ await getClockedInEmployees().then((res) => {
             forceClockOut(employee['pin'], employee['start_time'].substring(0, employee['start_time'].length - 3)).then((res) => {
                 forceClockedOutEmployees.push(res);
             })
+            return;
         }
         let row = document.createElement('li');
         let name = document.createElement('span');
