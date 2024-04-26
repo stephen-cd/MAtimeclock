@@ -63,8 +63,8 @@ function pad(val) {
 // Retrieve clocked in employees
 await getClockedInEmployees().then((res) => {
     // Append clocked in employees to Currently Clocked In section
+    let forceClockedOutEmployees = [];
     res.forEach(employee => {
-        let forceClockedOutEmployees = [];
         let date = employee['date'];
         let startTime = employee['start_time'];
         let currentTime = new Date();
