@@ -97,6 +97,7 @@ app.whenReady().then(() => {
     const myWindow = new BrowserWindow({
         width: 800,
         height: 512,
+	fullscreen: config.fullscreen,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false

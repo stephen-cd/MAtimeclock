@@ -1,6 +1,7 @@
 const config = {
     dbUpdateTime: '0 0 17 * * *',
     manualUpdate: true,
-    host:'http://127.0.0.1:8888/update-db/'
+    host: 'http://127.0.0.1:8888/update-db/',
+    fullscreen: false
 }
 module.exports = config;
