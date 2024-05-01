@@ -2,12 +2,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const log = require('electron-log');
 const cron = require('cron');
+const config = require('./config.js');
 
-// configurable variables here////////////////////
-const dbUpdateTime = '0 0 17 * * *';
-const manualUpdate = true;
-const host = 'http://127.0.0.1:8000/update-db/';
-//////////////////////////////////////////////////
 
 const sqlite3 = require('sqlite3');
 let db = new sqlite3.Database('db.sqlite3');
@@ -55,7 +51,7 @@ async function prepareDataForUpdate() {
 async function updateWebServer() {
     return new Promise(async (resolve, reject) => {
         let csrf_token;
-        const get = await fetch(host, {
+        const get = await fetch(config.host, {
             method: 'GET',
             headers: {
                 'Content-Type': 'text/html; charset=utf-8',
@@ -66,7 +62,7 @@ async function updateWebServer() {
             get.text().then((response) => {
                 csrf_token = response
                 prepareDataForUpdate().then(async (res) => {
-                    const post = await fetch(host, {
+                    const post = await fetch(config.host, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/html; charset=utf-8;',
@@ -89,7 +85,7 @@ async function updateWebServer() {
 
 function setUpdateJob() {
     new cron.CronJob (
-        dbUpdateTime,
+        config.dbUpdateTime,
         updateWebServer,
         console.log('job initiated'),
         true,
@@ -114,5 +110,5 @@ app.whenReady().then(() => {
 })
 
 ipcMain.on('manual-update', (e, arg) => {
-    e.sender.send('manual-update-reply', [manualUpdate, host]);
+    e.sender.send('manual-update-reply', [config.manualUpdate, config.host]);
 })
