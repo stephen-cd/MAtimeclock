@@ -24,7 +24,7 @@ Node.js and Electron are installed and a directory has been created for the appl
 <h1>Creating first employee (manager)</h1>
 
 Upon starting the application, the user should be prompted to add a manager, which involves entering a first and last name and a PIN. After submitting, they will be directed to the home page.
-From the home screen, a user enters their PIN. If the user is a manager, they can access either the time clock or manager options. Regular employees are automatically directed to the time clock.
+From the home screen, a user enters their PIN. Managers can then access either the time clock or manager options, and regular employees are automatically directed to the time clock.
 
 <h1>Clocking in and out</h1>
 
