@@ -19,7 +19,7 @@ Node.js and Electron are installed and a directory has been created for the appl
 2) Run npm install to install the dependencies.
 3) Create a folder in the root directory called logs, then create a main.log and transactions.log in the folder.
 4) From the back-end, add a copy of the SQLite file to the root directory.
-5) Run npm start the start the application.
+5) Run npm run start to start the application.
 
 <h1>Creating first employee (manager)</h1>
 
