@@ -4,14 +4,19 @@ An application that serves as a time clock as well as an employee management sys
 
 This is the front-end repository, which involves the Electron code for the main user interface.
 
+The back-end repository, responsible for data syncing/backup and reporting functionality, can be found here: https://github.com/stephen-cd/MAtimeclock-BE
+
 Note: This application was built to be used with a Raspberry Pi and the official Raspberry Pi touchscreen. It can be used without it, but it has not been adapted for other screen sizes and will start up in a resolution of 800x480.
 
 <h1>Setup</h1>
 
 <h3>Prerequisites</h3>
 
-The back-end (MAtimeclock-BE) has been configured and a copy of the SQLite database file has been obtained.<br>
-Node.js and Electron are installed and a directory has been created for the application. Instructions for this can be found [here](https://www.electronjs.org/docs/latest/tutorial/quick-start). Please follow up until and including setting the start command.
+- The back-end (MAtimeclock-BE) has been configured and a copy of the SQLite database file has been obtained.<br>
+
+_Please refer to this URL for cloning and setting up the backend repo and retrieving a copy of the SQLite database file: https://github.com/stephen-cd/MAtimeclock-BE_
+
+- Node.js and Electron are installed and a directory has been created for the application. Instructions for this can be found [here](https://www.electronjs.org/docs/latest/tutorial/quick-start). Please follow up until and including setting the start command.
 
 <h3>Steps</h3>
 
